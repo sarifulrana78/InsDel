@@ -61,7 +61,7 @@ foreach ($line in $status) {
 }
 
 # If we haven't reached 40 commits, generate dummy commits
-while ($count -lt 40) {
+while ($count -le 20) {
     $date = Get-Date
     Add-Content -Path "development_log.txt" -Value "Log entry: $date"
     git add development_log.txt
