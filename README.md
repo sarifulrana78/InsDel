@@ -12,3 +12,5 @@ Ushol Mama crowd-shipping platform.
 - Added Tailwind CSS configuration.
 
 - Improved accessibility with ARIA labels.
+
+- Setup ESLint and Prettier.
