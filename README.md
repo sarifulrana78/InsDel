@@ -14,3 +14,5 @@ Ushol Mama crowd-shipping platform.
 - Improved accessibility with ARIA labels.
 
 - Setup ESLint and Prettier.
+
+- Added state management structure.
