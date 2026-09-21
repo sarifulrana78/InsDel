@@ -10,3 +10,5 @@ Ushol Mama crowd-shipping platform.
 - Configured Next.js routing for internal pages.
 
 - Added Tailwind CSS configuration.
+
+- Improved accessibility with ARIA labels.
