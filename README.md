@@ -16,3 +16,5 @@ Ushol Mama crowd-shipping platform.
 - Setup ESLint and Prettier.
 
 - Added state management structure.
+
+- Finalized UI mockups for MVP.
