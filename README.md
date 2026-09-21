@@ -6,3 +6,5 @@ Ushol Mama crowd-shipping platform.
 - Added basic structure for New Request.
 
 - Added basic structure for Find Parcels.
+
+- Configured Next.js routing for internal pages.
