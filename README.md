@@ -26,3 +26,5 @@ Ushol Mama crowd-shipping platform.
 - Implemented real-time tracking mockups.
 
 - Refactored API controllers for better modularity.
+
+- Updated environment variable configurations.
