@@ -66,3 +66,5 @@ Ushol Mama crowd-shipping platform.
 - Added logic for secure parcel delivery confirmation.
 
 - Updated architecture diagrams for backend services.
+
+- Refined hover animations for call-to-action buttons.
