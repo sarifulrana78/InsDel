@@ -60,3 +60,5 @@ Ushol Mama crowd-shipping platform.
 - Handled edge cases in geofencing logic.
 
 - Updated global typography scale.
+
+- Added contributor guidelines.
