@@ -68,3 +68,5 @@ Ushol Mama crowd-shipping platform.
 - Updated architecture diagrams for backend services.
 
 - Refined hover animations for call-to-action buttons.
+
+- Optimized distance calculation algorithm for geofencing.
