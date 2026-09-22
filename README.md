@@ -58,3 +58,5 @@ Ushol Mama crowd-shipping platform.
 - Created a view for users to see their parcel history.
 
 - Handled edge cases in geofencing logic.
+
+- Updated global typography scale.
