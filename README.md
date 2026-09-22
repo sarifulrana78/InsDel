@@ -62,3 +62,5 @@ Ushol Mama crowd-shipping platform.
 - Updated global typography scale.
 
 - Added contributor guidelines.
+
+- Added logic for secure parcel delivery confirmation.
