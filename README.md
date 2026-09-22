@@ -54,3 +54,5 @@ Ushol Mama crowd-shipping platform.
 - Extracted OTP generation logic into a separate utility function.
 
 - Updated npm dependencies to latest stable versions.
+
+- Created a view for users to see their parcel history.
