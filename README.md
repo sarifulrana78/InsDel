@@ -42,3 +42,5 @@ Ushol Mama crowd-shipping platform.
 - Simplified parcel status enum for better readability.
 
 - Set up Jest and React Testing Library.
+
+- Added background location tracking for commuters.
