@@ -48,3 +48,5 @@ Ushol Mama crowd-shipping platform.
 - Fixed map rendering issues on mobile browsers.
 
 - Added comprehensive deployment instructions.
+
+- Implemented loading skeletons for parcel lists.
