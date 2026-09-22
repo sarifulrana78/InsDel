@@ -44,3 +44,5 @@ Ushol Mama crowd-shipping platform.
 - Set up Jest and React Testing Library.
 
 - Added background location tracking for commuters.
+
+- Fixed map rendering issues on mobile browsers.
