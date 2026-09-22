@@ -20,3 +20,5 @@ Ushol Mama crowd-shipping platform.
 - Finalized UI mockups for MVP.
 
 - Added error handling for form submissions.
+
+- Enhanced UI responsiveness on mobile devices.
