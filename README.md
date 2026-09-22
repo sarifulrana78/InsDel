@@ -38,3 +38,5 @@ Ushol Mama crowd-shipping platform.
 - Updated primary and secondary color palettes.
 
 - Added detailed API documentation for parcel routes.
+
+- Simplified parcel status enum for better readability.
