@@ -56,3 +56,5 @@ Ushol Mama crowd-shipping platform.
 - Updated npm dependencies to latest stable versions.
 
 - Created a view for users to see their parcel history.
+
+- Handled edge cases in geofencing logic.
