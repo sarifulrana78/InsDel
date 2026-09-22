@@ -70,3 +70,5 @@ Ushol Mama crowd-shipping platform.
 - Refined hover animations for call-to-action buttons.
 
 - Optimized distance calculation algorithm for geofencing.
+
+- Configured husky and lint-staged for pre-commit hooks.
