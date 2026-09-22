@@ -32,3 +32,5 @@ Ushol Mama crowd-shipping platform.
 - Integrated safety desk alert system structure.
 
 - Polished final transitions and micro-animations.
+
+- Configured offline support and caching.
