@@ -22,3 +22,5 @@ Ushol Mama crowd-shipping platform.
 - Added error handling for form submissions.
 
 - Enhanced UI responsiveness on mobile devices.
+
+- Implemented real-time tracking mockups.
