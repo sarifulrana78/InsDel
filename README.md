@@ -36,3 +36,5 @@ Ushol Mama crowd-shipping platform.
 - Configured offline support and caching.
 
 - Updated primary and secondary color palettes.
+
+- Added detailed API documentation for parcel routes.
