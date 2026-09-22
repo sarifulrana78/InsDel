@@ -46,3 +46,5 @@ Ushol Mama crowd-shipping platform.
 - Added background location tracking for commuters.
 
 - Fixed map rendering issues on mobile browsers.
+
+- Added comprehensive deployment instructions.
