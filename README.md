@@ -50,3 +50,5 @@ Ushol Mama crowd-shipping platform.
 - Added comprehensive deployment instructions.
 
 - Implemented loading skeletons for parcel lists.
+
+- Extracted OTP generation logic into a separate utility function.
