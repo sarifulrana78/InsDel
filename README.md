@@ -34,3 +34,5 @@ Ushol Mama crowd-shipping platform.
 - Polished final transitions and micro-animations.
 
 - Configured offline support and caching.
+
+- Updated primary and secondary color palettes.
