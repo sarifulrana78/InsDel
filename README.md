@@ -28,3 +28,5 @@ Ushol Mama crowd-shipping platform.
 - Refactored API controllers for better modularity.
 
 - Updated environment variable configurations.
+
+- Integrated safety desk alert system structure.
