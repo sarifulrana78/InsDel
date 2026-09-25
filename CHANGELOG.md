@@ -16,3 +16,6 @@
 
 ## Update 6 - 09/25/2026 21:32:59
 - Added documentation for: Docs: Specify geofencing rules for safe zone deliveries
+
+## Update 7 - 09/25/2026 21:32:59
+- Added documentation for: Docs: Document API endpoints for parcel tracking
