@@ -7,3 +7,6 @@
 
 ## Update 3 - 09/25/2026 21:32:58
 - Added documentation for: Docs: Detail Dual OTP security mechanism for pickups and dropoffs
+
+## Update 4 - 09/25/2026 21:32:58
+- Added documentation for: Docs: Draft transparent packaging policy guidelines
