@@ -13,3 +13,6 @@
 
 ## Update 5 - 09/25/2026 21:32:58
 - Added documentation for: Docs: Define parcel valuation caps and insurance limits
+
+## Update 6 - 09/25/2026 21:32:59
+- Added documentation for: Docs: Specify geofencing rules for safe zone deliveries
