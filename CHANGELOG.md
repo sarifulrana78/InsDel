@@ -10,3 +10,6 @@
 
 ## Update 4 - 09/25/2026 21:32:58
 - Added documentation for: Docs: Draft transparent packaging policy guidelines
+
+## Update 5 - 09/25/2026 21:32:58
+- Added documentation for: Docs: Define parcel valuation caps and insurance limits
