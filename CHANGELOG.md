@@ -19,3 +19,6 @@
 
 ## Update 7 - 09/25/2026 21:32:59
 - Added documentation for: Docs: Document API endpoints for parcel tracking
+
+## Update 8 - 09/25/2026 21:33:00
+- Added documentation for: Docs: Draft commuter payout structure and commission rates
