@@ -4,3 +4,6 @@
 
 ## Update 2 - 09/26/2026 18:35:58
 - Added documentation for: Docs: Document NID verification flow using Porichoy API
+
+## Update 3 - 09/26/2026 18:35:59
+- Added documentation for: Docs: Detail Dual OTP security mechanism for pickups and dropoffs
