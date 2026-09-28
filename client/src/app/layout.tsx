@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import Link from "next/link";
 import "./globals.css";
+import { AppProvider } from "../context/AppContext";
 import { CartProvider } from "../context/CartContext";
+import Navbar from "../components/Navbar";
+import GlobalSOS from "../components/GlobalSOS";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,35 +17,27 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "InsDel",
-  description: "Delivery and Inspection Service",
+  title: "Ushol Mama | ঢাকা'র ১ম কমিউটার ক্রাউড-শিপিং প্ল্যাটফর্ম",
+  description: "মেট্রোরেল বা বাসে যাতায়াতের পথে ছোট পার্সেল নিয়ে নিজের ভাড়া উসুল করুন। ১০০% NID ভেরিফাইড ও সুরক্ষিত এসক্রো পেমেন্ট।",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
-      lang="en"
+      lang="bn"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col bg-gray-50 text-gray-900">
-        <CartProvider>
-          <header className="bg-white shadow-sm sticky top-0 z-50">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-              <Link href="/" className="flex items-center gap-2 group">
-                <div className="bg-green-600 text-white p-2 rounded-lg font-bold text-xl group-hover:bg-green-700 transition-colors">
-                  ID
-                </div>
-                <span className="font-extrabold text-xl tracking-tight text-gray-900">
-                  InsDel
-                </span>
-              </Link>
-            </div>
-          </header>
-          <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
-            {children}
-          </main>
-        </CartProvider>
+      <body className="min-h-full flex flex-col bg-slate-50 text-slate-900 font-sans selection:bg-emerald-500 selection:text-white">
+        <AppProvider>
+          <CartProvider>
+            <Navbar />
+            <main className="flex-1 w-full">
+              {children}
+            </main>
+            <GlobalSOS />
+          </CartProvider>
+        </AppProvider>
       </body>
     </html>
   );
