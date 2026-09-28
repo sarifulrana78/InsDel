@@ -24,10 +24,12 @@ import {
 } from 'lucide-react';
 import { AuthModal } from '@/components/AuthModal';
 import SafetyDeclarationModal from '@/components/SafetyDeclarationModal';
+import { useApp } from '@/context/AppContext';
 
 export default function App() {
-  const [language, setLanguage] = useState<'BN' | 'EN'>('BN');
-  const [userRole, setUserRole] = useState<'sender' | 'commuter'>('sender');
+  const { language, setLanguage, user, switchRole } = useApp();
+  const userRole = user.role;
+  const setUserRole = (r: 'sender' | 'commuter') => switchRole(r);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isSafetyModalOpen, setIsSafetyModalOpen] = useState(false);
 
@@ -68,48 +70,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-emerald-500 selection:text-white">
       
-      {/* 1. NAVBAR (Roadie Style - Clean, White/Light, Solid) */}
-      <nav className="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-          <div className="flex items-center space-x-3 cursor-pointer">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-emerald-400 flex items-center justify-center font-black text-white text-xl shadow-md">
-              উ
-            </div>
-            <div>
-              <span className="text-2xl font-black text-slate-900 tracking-tight">
-                Ushol Mama
-              </span>
-            </div>
-          </div>
-
-          <div className="hidden md:flex items-center space-x-8 text-sm font-semibold text-slate-600">
-            <a href="#how-it-works" className="hover:text-emerald-600 transition">{language === 'BN' ? 'কীভাবে কাজ করে' : 'How it works'}</a>
-            <a href="#solutions" className="hover:text-emerald-600 transition">{language === 'BN' ? 'সমাধান' : 'Solutions'}</a>
-            <a href="#safety" className="hover:text-emerald-600 transition">{language === 'BN' ? 'নিরাপত্তা' : 'Safety'}</a>
-          </div>
-
-          <div className="flex items-center space-x-4">
-            <button 
-              onClick={() => setLanguage(language === 'BN' ? 'EN' : 'BN')}
-              className="px-3 py-1.5 rounded-lg border border-slate-200 bg-slate-50 text-xs font-bold text-slate-600 hover:border-emerald-500 transition"
-            >
-              {language === 'BN' ? 'English' : 'বাংলা'}
-            </button>
-            <button 
-              onClick={() => setIsAuthModalOpen(true)}
-              className="hidden sm:block px-5 py-2.5 text-slate-700 font-bold text-sm hover:text-emerald-600 transition"
-            >
-              {language === 'BN' ? 'লগইন' : 'Login'}
-            </button>
-            <button 
-              onClick={() => setIsAuthModalOpen(true)}
-              className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-md transition"
-            >
-              {language === 'BN' ? 'শুরু করুন' : 'Get Started'}
-            </button>
-          </div>
-        </div>
-      </nav>
+      {/* Hero Section Begins */}
 
       {/* 2. HERO SECTION (Split Layout) */}
       <section className="relative bg-slate-50 pt-16 pb-24 overflow-hidden">
