@@ -25,6 +25,38 @@ export default function Footer() {
   const [isTermsOpen, setIsTermsOpen] = useState(false);
   const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
   const [isSafetyOpen, setIsSafetyOpen] = useState(false);
+  const [isContactOpen, setIsContactOpen] = useState(false);
+
+  // Copy email feedback state
+  const [copiedEmail, setCopiedEmail] = useState(false);
+
+  // Contact modal form state
+  const [contactForm, setContactForm] = useState({
+    name: '',
+    emailOrPhone: '',
+    topic: 'general',
+    message: ''
+  });
+  const [contactSubmitted, setContactSubmitted] = useState(false);
+
+  const handleCopyEmail = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    navigator.clipboard.writeText('support@usholmama.com');
+    setCopiedEmail(true);
+    setTimeout(() => setCopiedEmail(false), 2500);
+  };
+
+  const handleContactSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!contactForm.name || !contactForm.emailOrPhone || !contactForm.message) return;
+    setContactSubmitted(true);
+    setTimeout(() => {
+      setContactSubmitted(false);
+      setContactForm({ name: '', emailOrPhone: '', topic: 'general', message: '' });
+      setIsContactOpen(false);
+    }, 2000);
+  };
 
   const handleSectionScroll = (e: React.MouseEvent<HTMLAnchorElement>, hash: string) => {
     if (window.location.pathname === '/') {
@@ -158,24 +190,66 @@ export default function Footer() {
               </ul>
             </div>
 
-            {/* Column 4: Contact Preview */}
+            {/* Column 4: Contact & Support */}
             <div>
               <h5 className="text-xs font-black text-slate-900 uppercase tracking-wider mb-5 flex items-center gap-2">
                 <Phone className="w-4 h-4 text-emerald-600" />
                 <span>{language === 'BN' ? 'যোগাযোগ' : 'Contact'}</span>
               </h5>
               <ul className="space-y-3.5 text-sm text-slate-600">
-                <li className="flex items-start space-x-2 text-slate-700">
-                  <MapPin className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                  <span>{language === 'BN' ? 'লেভেল ৪, আইটি পার্ক, কারওয়ান বাজার' : 'Level 4, IT Park, Karwan Bazar'}</span>
+                {/* Office Location */}
+                <li>
+                  <button
+                    onClick={() => setIsContactOpen(true)}
+                    className="flex items-start space-x-2 text-left hover:text-emerald-600 transition group cursor-pointer"
+                    title={language === 'BN' ? 'ম্যাপ ও ঠিকানা দেখুন' : 'View office address and map'}
+                  >
+                    <MapPin className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
+                    <span className="font-medium text-slate-700 group-hover:text-emerald-600">
+                      {language === 'BN' ? 'লেভেল ৪, আইটি পার্ক, কারওয়ান বাজার' : 'Level 4, IT Park, Karwan Bazar'}
+                    </span>
+                  </button>
                 </li>
-                <li className="flex items-center space-x-2 text-slate-700">
-                  <Mail className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <a href="mailto:support@usholmama.com" className="hover:text-emerald-600 transition">support@usholmama.com</a>
+
+                {/* Email with mailto and instant copy button */}
+                <li className="flex items-center justify-between group">
+                  <a 
+                    href="mailto:support@usholmama.com"
+                    className="flex items-center space-x-2 text-slate-700 hover:text-emerald-600 transition font-medium"
+                    title="Send email"
+                  >
+                    <Mail className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <span>support@usholmama.com</span>
+                  </a>
+                  <button
+                    onClick={handleCopyEmail}
+                    className="p-1 text-slate-400 hover:text-emerald-600 rounded hover:bg-slate-100 transition cursor-pointer"
+                    title={copiedEmail ? (language === 'BN' ? 'কপি হয়েছে!' : 'Copied!') : (language === 'BN' ? 'ইমেইল কপি করুন' : 'Copy Email')}
+                  >
+                    {copiedEmail ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> : <Mail className="w-3.5 h-3.5" />}
+                  </button>
                 </li>
-                <li className="flex items-center space-x-2 text-slate-700">
-                  <Phone className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <a href="tel:+8809612000000" className="hover:text-emerald-600 transition">+880 9612-000000</a>
+
+                {/* Phone */}
+                <li>
+                  <a 
+                    href="tel:+8809612000000"
+                    className="flex items-center space-x-2 text-slate-700 hover:text-emerald-600 transition font-medium"
+                    title="Click to call hotline"
+                  >
+                    <Phone className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <span>+880 9612-000000</span>
+                  </a>
+                </li>
+
+                {/* Direct Message CTA */}
+                <li className="pt-1">
+                  <button
+                    onClick={() => setIsContactOpen(true)}
+                    className="w-full py-2 px-3 bg-slate-100 hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 border border-slate-200 hover:border-emerald-300 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 cursor-pointer"
+                  >
+                    <span>{language === 'BN' ? 'বার্তা পাঠান / সেফটি ডেস্ক' : 'Message Support Desk'}</span>
+                  </button>
                 </li>
               </ul>
             </div>
@@ -349,7 +423,135 @@ export default function Footer() {
         </div>
       )}
 
-      {/* 4. SAFETY DECLARATION & PROHIBITED ITEMS MODAL */}
+      {/* 4. CONTACT / OFFICE / MESSAGE MODAL */}
+      {isContactOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-slate-100 flex flex-col">
+            <div className="p-6 sm:p-8 border-b border-slate-100 flex items-center justify-between sticky top-0 bg-white/95 backdrop-blur-md z-10">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 rounded-2xl bg-emerald-600 text-white flex items-center justify-center">
+                  <Phone className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-black text-slate-900">
+                    {language === 'BN' ? 'যোগাযোগ ও হেড অফিস' : 'Contact & Head Office'}
+                  </h3>
+                  <p className="text-xs text-slate-500 font-medium">
+                    {language === 'BN' ? '২৪/৭ সেফটি ডেস্ক ও কাস্টমার কেয়ার' : '24/7 Safety Desk & Support Center'}
+                  </p>
+                </div>
+              </div>
+              <button 
+                onClick={() => setIsContactOpen(false)}
+                className="p-2 text-slate-400 hover:text-slate-700 rounded-full hover:bg-slate-100 transition"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="p-6 sm:p-8 space-y-6">
+              <div className="grid sm:grid-cols-2 gap-3">
+                <div className="p-4 bg-slate-50 border border-slate-200/80 rounded-2xl space-y-2">
+                  <div className="flex items-center space-x-2 text-emerald-700 font-bold text-xs uppercase tracking-wide">
+                    <MapPin className="w-4 h-4 text-emerald-600" />
+                    <span>{language === 'BN' ? 'প্রধান কার্যালয়' : 'Headquarters'}</span>
+                  </div>
+                  <p className="text-xs font-semibold text-slate-800 leading-snug">
+                    {language === 'BN' ? 'লেভেল ৪, আইটি পার্ক, কারওয়ান বাজার, ঢাকা-১২১৫' : 'Level 4, IT Park, Karwan Bazar, Dhaka-1215'}
+                  </p>
+                  <p className="text-[11px] text-slate-500">
+                    {language === 'BN' ? 'নিকটবর্তী মেট্রো: কারওয়ান বাজার স্টেশন (গেট ২)' : 'Nearest Metro: Karwan Bazar Station (Exit 2)'}
+                  </p>
+                  <a
+                    href="https://maps.google.com/?q=Karwan+Bazar+Dhaka"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center space-x-1 text-xs font-bold text-emerald-600 hover:text-emerald-700 hover:underline pt-1"
+                  >
+                    <span>{language === 'BN' ? 'গুগল ম্যাপে দেখুন' : 'View on Google Maps'}</span>
+                  </a>
+                </div>
+
+                <div className="p-4 bg-slate-50 border border-slate-200/80 rounded-2xl space-y-2">
+                  <div className="flex items-center space-x-2 text-emerald-700 font-bold text-xs uppercase tracking-wide">
+                    <Phone className="w-4 h-4 text-emerald-600" />
+                    <span>{language === 'BN' ? 'হটলাইন ও সহায়তা' : 'Helpline & SOS'}</span>
+                  </div>
+                  <div className="space-y-1 text-xs text-slate-700">
+                    <div className="flex items-center justify-between">
+                      <span className="text-slate-500">{language === 'BN' ? 'সাপোর্ট:' : 'Support:'}</span>
+                      <a href="tel:+8809612000000" className="font-bold text-slate-900 hover:text-emerald-600">+880 9612-000000</a>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-slate-500">{language === 'BN' ? 'জরুরি পুলিশ:' : 'Police SOS:'}</span>
+                      <a href="tel:999" className="font-bold text-rose-600 hover:underline">৯৯৯ (999)</a>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-slate-500">{language === 'BN' ? 'ইমেইল:' : 'Email:'}</span>
+                      <a href="mailto:support@usholmama.com" className="font-bold text-emerald-600">support@usholmama.com</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-slate-50/80 border border-slate-200/80 rounded-2xl p-5 space-y-4">
+                <h4 className="font-bold text-slate-900 text-sm">
+                  {language === 'BN' ? 'আমাদের সরাসরি বার্তা পাঠান' : 'Send us a Direct Message'}
+                </h4>
+                {contactSubmitted ? (
+                  <div className="p-4 bg-emerald-100/80 border border-emerald-200 rounded-xl text-center space-y-1 text-emerald-900">
+                    <CheckCircle2 className="w-8 h-8 text-emerald-600 mx-auto" />
+                    <p className="font-bold text-sm">
+                      {language === 'BN' ? 'ধন্যবাদ! আপনার বার্তাটি গৃহীত হয়েছে।' : 'Thank you! Your message has been received.'}
+                    </p>
+                  </div>
+                ) : (
+                  <form onSubmit={handleContactSubmit} className="space-y-3">
+                    <div className="grid sm:grid-cols-2 gap-3">
+                      <div>
+                        <input
+                          type="text"
+                          required
+                          value={contactForm.name}
+                          onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
+                          placeholder={language === 'BN' ? 'আপনার নাম' : 'Your Name'}
+                          className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs"
+                        />
+                      </div>
+                      <div>
+                        <input
+                          type="text"
+                          required
+                          value={contactForm.emailOrPhone}
+                          onChange={(e) => setContactForm({ ...contactForm, emailOrPhone: e.target.value })}
+                          placeholder={language === 'BN' ? 'ফোন বা ইমেইল' : 'Phone or Email'}
+                          className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs"
+                        />
+                      </div>
+                    </div>
+                    <textarea
+                      required
+                      rows={2}
+                      value={contactForm.message}
+                      onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
+                      placeholder={language === 'BN' ? 'বার্তা লিখুন...' : 'Message...'}
+                      className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs resize-none"
+                    />
+                    <button
+                      type="submit"
+                      className="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl transition"
+                    >
+                      {language === 'BN' ? 'বার্তা পাঠান' : 'Submit Message'}
+                    </button>
+                  </form>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 5. SAFETY DECLARATION & PROHIBITED ITEMS MODAL */}
       <SafetyDeclarationModal
         isOpen={isSafetyOpen}
         onClose={() => setIsSafetyOpen(false)}
