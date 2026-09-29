@@ -191,7 +191,7 @@ export default function App() {
       </div>
 
       {/* 3. VALUE PROPOSITION (Why Ushol Mama) */}
-      <section className="py-24 bg-white">
+      <section id="about" className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="text-3xl md:text-4xl font-black text-slate-900 mb-4">
@@ -724,76 +724,6 @@ export default function App() {
 
         </div>
       </section>
-
-      {/* 7. FOOTER */}
-      <footer className="bg-white border-t border-slate-200 pt-20 pb-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 md:grid-cols-4 gap-12 mb-16">
-          
-          <div className="col-span-2 md:col-span-1 space-y-6">
-            <div className="flex items-center space-x-2">
-              <div className="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center font-black text-white text-xl">উ</div>
-              <span className="text-xl font-black text-slate-900">Ushol Mama</span>
-            </div>
-            <p className="text-sm text-slate-500 leading-relaxed">
-              {language === 'BN' ? 'বাংলাদেশের প্রথম কমিউটার-ভিত্তিক ক্রাউড-শিপিং প্ল্যাটফর্ম। যাওয়ার পথে ভাড়া উসুল!' : 'Bangladesh\'s first commuter-based crowd-shipping platform. Recover your fare on the way!'}
-            </p>
-          </div>
-
-          <div>
-            <h5 className="text-sm font-bold text-slate-900 mb-6">{language === 'BN' ? 'কোম্পানি' : 'Company'}</h5>
-            <ul className="space-y-4 text-sm text-slate-500">
-              <li><a href="#" className="hover:text-emerald-600 transition">{language === 'BN' ? 'আমাদের সম্পর্কে' : 'About Us'}</a></li>
-              <li><a href="#how-it-works" className="hover:text-emerald-600 transition">{language === 'BN' ? 'কীভাবে কাজ করে' : 'How it works'}</a></li>
-              <li><a href="#solutions" className="hover:text-emerald-600 transition">{language === 'BN' ? 'সমাধান' : 'Solutions'}</a></li>
-            </ul>
-          </div>
-
-          <div>
-            <h5 className="text-sm font-bold text-slate-900 mb-6">{language === 'BN' ? 'আইনি বিষয়াবলী' : 'Legal & Compliance'}</h5>
-            <ul className="space-y-4 text-sm text-slate-500">
-              <li>
-                <a href="#" className="hover:text-emerald-600 transition block">
-                  {language === 'BN' ? 'টার্মস অ্যান্ড কন্ডিশনস' : 'Terms of Service'}
-                  <span className="block text-[10px] text-slate-400 mt-1 leading-tight">
-                    {language === 'BN' 
-                      ? '* প্ল্যাটফর্ম দায়মুক্ত (P2P Facilitation)। ইনস্পেকশন রুলস প্রযোজ্য।' 
-                      : '* Platform holds immunity under P2P facilitation. Inspection rules apply.'}
-                  </span>
-                </a>
-              </li>
-              <li><a href="#" className="hover:text-emerald-600 transition">{language === 'BN' ? 'প্রাইভেসি পলিসি' : 'Privacy Policy'}</a></li>
-              <li>
-                <button 
-                  onClick={() => setIsSafetyModalOpen(true)} 
-                  className="hover:text-rose-400 transition text-rose-500 font-semibold cursor-pointer text-left"
-                >
-                  {language === 'BN' ? 'নিষিদ্ধ মালামাল ও আইনি শপথ' : 'Prohibited Items & Legal Declaration'}
-                </button>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h5 className="text-sm font-bold text-slate-900 mb-6">{language === 'BN' ? 'যোগাযোগ' : 'Contact'}</h5>
-            <ul className="space-y-4 text-sm text-slate-500">
-              <li>{language === 'BN' ? 'লেভেল ৪, আইটি পার্ক, কারওয়ান বাজার' : 'Level 4, IT Park, Karwan Bazar'}</li>
-              <li>support@usholmama.com</li>
-              <li>+880 9612-000000</li>
-            </ul>
-          </div>
-
-        </div>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 border-t border-slate-100 flex flex-col md:flex-row items-center justify-between">
-          <p className="text-sm text-slate-400 mb-4 md:mb-0">
-            © 2026 Ushol Mama Logistics Network. All rights reserved.
-          </p>
-          <div className="flex space-x-4">
-            <div className="text-sm font-medium px-3 py-1 bg-slate-100 text-slate-600 rounded-full">Porichoy Verified</div>
-            <div className="text-sm font-medium px-3 py-1 bg-slate-100 text-slate-600 rounded-full">Secured with Better Auth</div>
-          </div>
-        </div>
-      </footer>
 
       {/* CSS for Marquee (Put inside global.css or here for demo) */}
       <style dangerouslySetInnerHTML={{__html: `

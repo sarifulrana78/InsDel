@@ -4,6 +4,7 @@ import "./globals.css";
 import { AppProvider } from "../context/AppContext";
 import { CartProvider } from "../context/CartContext";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import GlobalSOS from "../components/GlobalSOS";
 
 const geistSans = Geist({
@@ -35,6 +36,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <main className="flex-1 w-full">
               {children}
             </main>
+            <Footer />
             <GlobalSOS />
           </CartProvider>
         </AppProvider>
