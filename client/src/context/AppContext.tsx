@@ -15,6 +15,8 @@ export interface UserProfile {
   rating: number;
   totalTrips: number;
   avatar: string;
+  isLoggedIn: boolean;
+  authProvider?: 'google' | 'manual' | 'demo';
 }
 
 export interface ParcelTimelineEvent {
@@ -67,21 +69,53 @@ export interface AppContextType {
   cancelParcel: (parcelId: string) => boolean;
   getParcelById: (id: string) => ParcelItem | undefined;
   resetDemoData: () => void;
+  isAuthModalOpen: boolean;
+  authModalMode: 'login' | 'signup';
+  openAuthModal: (mode?: 'login' | 'signup') => void;
+  closeAuthModal: () => void;
+  loginManual: (credentials: { identifier: string; password?: string; role?: 'sender' | 'commuter'; name?: string }) => { success: boolean; message?: string };
+  loginWithGoogle: (googleData?: { name?: string; email?: string; avatar?: string; role?: 'sender' | 'commuter' }) => { success: boolean; message?: string };
+  registerManual: (data: { name: string; emailOrPhone: string; password?: string; role?: 'sender' | 'commuter'; nidNumber?: string }) => { success: boolean; message?: string };
+  logout: () => void;
 }
 
+export const DEMO_USERS = {
+  tanvir: {
+    id: 'usr_tanvir_01',
+    name: 'তানভীর আহমেদ',
+    phone: '01712-345678',
+    email: 'tanvir.commuter@gmail.com',
+    role: 'sender' as const,
+    isNidVerified: true,
+    nidNumber: '19952692817290123',
+    walletBalance: 650,
+    escrowLockedBalance: 150,
+    rating: 4.95,
+    totalTrips: 18,
+    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+    isLoggedIn: true,
+    authProvider: 'demo' as const
+  },
+  kamrul: {
+    id: 'usr_commuter_88',
+    name: 'কামরুল হাসান (মেট্রো যাত্রী)',
+    phone: '01911-556677',
+    email: 'kamrul.hasan@gmail.com',
+    role: 'commuter' as const,
+    isNidVerified: true,
+    nidNumber: '19882692817290456',
+    walletBalance: 1420,
+    escrowLockedBalance: 0,
+    rating: 5.0,
+    totalTrips: 42,
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
+    isLoggedIn: true,
+    authProvider: 'demo' as const
+  }
+};
+
 const DEFAULT_USER: UserProfile = {
-  id: 'usr_tanvir_01',
-  name: 'তানভীর আহমেদ',
-  phone: '01712-345678',
-  email: 'tanvir.commuter@gmail.com',
-  role: 'sender',
-  isNidVerified: true,
-  nidNumber: '19952692817290123',
-  walletBalance: 650,
-  escrowLockedBalance: 150,
-  rating: 4.95,
-  totalTrips: 18,
-  avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80'
+  ...DEMO_USERS.tanvir
 };
 
 const INITIAL_PARCELS: ParcelItem[] = [
@@ -208,6 +242,17 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<UserProfile>(DEFAULT_USER);
   const [parcels, setParcels] = useState<ParcelItem[]>(INITIAL_PARCELS);
   const [isInitialized, setIsInitialized] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authModalMode, setAuthModalMode] = useState<'login' | 'signup'>('login');
+
+  const openAuthModal = (mode: 'login' | 'signup' = 'login') => {
+    setAuthModalMode(mode);
+    setIsAuthModalOpen(true);
+  };
+
+  const closeAuthModal = () => {
+    setIsAuthModalOpen(false);
+  };
 
   // Load from localStorage on client mount
   useEffect(() => {
@@ -216,7 +261,13 @@ export function AppProvider({ children }: { children: ReactNode }) {
       if (storedLang) setLanguageState(storedLang);
 
       const storedUser = localStorage.getItem('ushol_user');
-      if (storedUser) setUser(JSON.parse(storedUser));
+      if (storedUser) {
+        const parsed = JSON.parse(storedUser);
+        if (parsed.isLoggedIn === undefined) {
+          parsed.isLoggedIn = true;
+        }
+        setUser(parsed);
+      }
 
       const storedParcels = localStorage.getItem('ushol_parcels');
       if (storedParcels) {
@@ -507,6 +558,107 @@ export function AppProvider({ children }: { children: ReactNode }) {
     return cancelled;
   };
 
+  const loginManual = ({
+    identifier,
+    password,
+    role = 'sender',
+    name
+  }: {
+    identifier: string;
+    password?: string;
+    role?: 'sender' | 'commuter';
+    name?: string;
+  }): { success: boolean; message?: string } => {
+    const trimmed = identifier.trim().toLowerCase();
+
+    // Check if matching preset demo accounts
+    if (trimmed.includes('kamrul') || trimmed.includes('01911')) {
+      setUser({ ...DEMO_USERS.kamrul, role: role || DEMO_USERS.kamrul.role, isLoggedIn: true, authProvider: 'manual' });
+      return { success: true, message: 'Logged in as Kamrul Hasan' };
+    }
+    if (trimmed.includes('tanvir') || trimmed.includes('01712')) {
+      setUser({ ...DEMO_USERS.tanvir, role: role || DEMO_USERS.tanvir.role, isLoggedIn: true, authProvider: 'manual' });
+      return { success: true, message: 'Logged in as Tanvir Ahmed' };
+    }
+
+    const isEmail = trimmed.includes('@');
+    const displayName = name || (isEmail ? identifier.split('@')[0] : 'ইউজার ' + identifier.slice(-4));
+
+    setUser(prev => ({
+      ...prev,
+      id: 'usr_' + Date.now().toString().slice(-6),
+      name: displayName,
+      email: isEmail ? identifier : `${identifier}@usholmama.com`,
+      phone: isEmail ? '01700-123456' : identifier,
+      role: role,
+      isLoggedIn: true,
+      isNidVerified: true,
+      authProvider: 'manual'
+    }));
+
+    return { success: true, message: 'Login successful' };
+  };
+
+  const loginWithGoogle = (googleData?: {
+    name?: string;
+    email?: string;
+    avatar?: string;
+    role?: 'sender' | 'commuter';
+  }): { success: boolean; message?: string } => {
+    const gName = googleData?.name || 'তানভীর আহমেদ (Google)';
+    const gEmail = googleData?.email || 'tanvir.commuter@gmail.com';
+    const gAvatar = googleData?.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80';
+
+    setUser(prev => ({
+      ...prev,
+      id: 'usr_g_' + Date.now().toString().slice(-6),
+      name: gName,
+      email: gEmail,
+      avatar: gAvatar,
+      role: googleData?.role || prev.role || 'sender',
+      isLoggedIn: true,
+      isNidVerified: true,
+      authProvider: 'google'
+    }));
+
+    return { success: true, message: 'Google Sign-in successful' };
+  };
+
+  const registerManual = (data: {
+    name: string;
+    emailOrPhone: string;
+    password?: string;
+    role?: 'sender' | 'commuter';
+    nidNumber?: string;
+  }): { success: boolean; message?: string } => {
+    const isEmail = data.emailOrPhone.includes('@');
+    setUser({
+      id: 'usr_' + Date.now().toString().slice(-6),
+      name: data.name,
+      email: isEmail ? data.emailOrPhone : `${data.emailOrPhone}@usholmama.com`,
+      phone: isEmail ? '01712-000000' : data.emailOrPhone,
+      role: data.role || 'sender',
+      isNidVerified: !!data.nidNumber,
+      nidNumber: data.nidNumber || '1995' + Math.floor(100000000 + Math.random() * 900000000),
+      walletBalance: 200, // Sign up bonus ৳200
+      escrowLockedBalance: 0,
+      rating: 5.0,
+      totalTrips: 0,
+      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+      isLoggedIn: true,
+      authProvider: 'manual'
+    });
+
+    return { success: true, message: 'Account created successfully' };
+  };
+
+  const logout = () => {
+    setUser(prev => ({
+      ...prev,
+      isLoggedIn: false
+    }));
+  };
+
   const getParcelById = (id: string) => parcels.find(p => p.id === id);
 
   const resetDemoData = () => {
@@ -535,7 +687,15 @@ export function AppProvider({ children }: { children: ReactNode }) {
         reportParcel,
         cancelParcel,
         getParcelById,
-        resetDemoData
+        resetDemoData,
+        isAuthModalOpen,
+        authModalMode,
+        openAuthModal,
+        closeAuthModal,
+        loginManual,
+        loginWithGoogle,
+        registerManual,
+        logout
       }}
     >
       {children}
