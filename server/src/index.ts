@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { createParcel, searchAvailableParcels, verifyDeliveryOTP, reportParcel, arriveAtDestination, verifyRecipientDelivery } from './controllers/parcelController';
-import { verifyNidAndSelfie } from './controllers/authController';
+import { verifyNidAndSelfie, loginUser, registerUser, googleAuth } from './controllers/authController';
 import { riskAssessmentMiddleware } from './middleware/riskAssessmentMiddleware';
 import { geofenceMiddleware } from './middleware/geofenceMiddleware';
 
@@ -23,6 +23,9 @@ app.get('/', (req, res) => {
 });
 
 // Auth / Compliance Routes
+app.post('/api/v1/auth/login', loginUser);
+app.post('/api/v1/auth/register', registerUser);
+app.post('/api/v1/auth/google', googleAuth);
 app.post('/api/v1/auth/verify-nid', verifyNidAndSelfie);
 
 // Parcel Routes
