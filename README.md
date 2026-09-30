@@ -72,3 +72,14 @@ Ushol Mama crowd-shipping platform.
 - Optimized distance calculation algorithm for geofencing.
 
 - Configured husky and lint-staged for pre-commit hooks.
+
+- Implemented Multi-Provider Authentication Engine with Manual Credentials and Google OAuth.
+
+- Built interactive AuthModal with dual-role picker, password visibility toggle, and instant demo account presets.
+
+- Created standalone /login route showcasing Dhaka Metro Rail (MRT Line-6) crowd-shipping network and Escrow security.
+
+- Enhanced global Navbar with dynamic authenticated/unauthenticated states, account switching, and working logout action.
+
+- Added backend authentication controllers and Express API routes for manual and Google sign-in.
+
