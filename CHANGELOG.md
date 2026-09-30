@@ -35,3 +35,12 @@
 ## Update 12 - 09/29/2026 23:15:00
 - Footer & Legal Architecture: Built production-ready interactive Footer with About Us, Terms of Service, Privacy Policy, Prohibited Items oath, Office & Contact Desk, Porichoy Verified badge modal, Better Auth escrow specs, and global layout integration
 
+## Update 13 - 09/30/2026 19:35:00
+- Authentication Engine & Google Sign-In: Implemented comprehensive multi-provider authentication system supporting manual credentials (Bangladeshi phone/email + password) and Continue with Google OAuth flow.
+- Interactive AuthModal: Built glassmorphic authentication modal with dual-role picker (Sender vs Commuter), show/hide password toggle, 1-click demo test presets, and real-time input format validation.
+- Google OAuth Account Chooser: Integrated branded Google Sign-In button with interactive Google account selector sheet and instant profile synchronization.
+- Smart Navbar Authentication States: Upgraded global Navbar with conditional states for logged-in and logged-out users, including working Logout button, Switch Account trigger, and responsive mobile drawer actions.
+- Dedicated /login View: Created standalone full-page authentication route featuring Dhaka Metro Rail (MRT Line-6) live trust showcase, 100% Escrow security guarantees, and active session detection.
+- Backend API Endpoints: Added server controller handlers and Express routes for `/api/v1/auth/login`, `/api/v1/auth/register`, and `/api/v1/auth/google`.
+
+
