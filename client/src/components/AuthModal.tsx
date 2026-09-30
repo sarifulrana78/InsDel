@@ -18,6 +18,7 @@ import {
   Check
 } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
+import { isValidBangladeshiPhone, isValidEmail, checkPasswordStrength } from '@/utils/authUtils';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -120,6 +121,16 @@ export function AuthModal({ isOpen, onClose, language: propLang, initialMode = '
     }
     if (!regIdentifier.trim()) {
       setErrorMessage(lang === 'BN' ? 'ইমেইল বা মোবাইল নম্বর প্রদান করুন।' : 'Please enter your phone or email.');
+      return;
+    }
+    const isPhone = isValidBangladeshiPhone(regIdentifier);
+    const isEmail = isValidEmail(regIdentifier);
+    if (!isPhone && !isEmail) {
+      setErrorMessage(lang === 'BN' ? 'সঠিক ১১ ডিজিটের মোবাইল নম্বর (উদা: 017XXXXXXXX) বা বৈধ ইমেইল দিন।' : 'Please enter a valid 11-digit mobile number or email address.');
+      return;
+    }
+    if (regPassword && regPassword.length < 6) {
+      setErrorMessage(lang === 'BN' ? 'পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।' : 'Password must be at least 6 characters.');
       return;
     }
 
