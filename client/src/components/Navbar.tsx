@@ -79,7 +79,7 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Click outside handler for dropdowns
+  // Click outside and Escape key handler for dropdowns
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (profileRef.current && !profileRef.current.contains(e.target as Node)) {
@@ -89,8 +89,21 @@ export default function Navbar() {
         setIsNotificationsOpen(false);
       }
     };
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsProfileDropdownOpen(false);
+        setIsNotificationsOpen(false);
+        setMobileMenuOpen(false);
+      }
+    };
+
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
   }, []);
 
   const navLinks = [
@@ -276,6 +289,9 @@ export default function Navbar() {
                   <div className="relative" ref={notifRef}>
                     <button
                       onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
+                      aria-haspopup="dialog"
+                      aria-expanded={isNotificationsOpen}
+                      aria-label={language === 'BN' ? 'নোটিফিকেশন প্যানেল' : 'Notifications panel'}
                       className="relative p-2 rounded-2xl border border-slate-800 bg-slate-900/90 hover:bg-slate-800 text-slate-300 hover:text-white transition cursor-pointer ring-1 ring-white/5"
                       title={language === 'BN' ? 'নোটিফিকেশন' : 'Notifications'}
                     >
@@ -350,6 +366,9 @@ export default function Navbar() {
                   <div className="relative" ref={profileRef}>
                     <button
                       onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
+                      aria-haspopup="menu"
+                      aria-expanded={isProfileDropdownOpen}
+                      aria-label={language === 'BN' ? 'ইউজার প্রোফাইল মেনু' : 'User profile menu'}
                       className="flex items-center space-x-2 pl-1.5 pr-2.5 py-1 rounded-2xl border border-slate-800 hover:border-slate-700 bg-slate-900/90 transition cursor-pointer group ring-1 ring-white/5"
                     >
                       <div className="relative">
