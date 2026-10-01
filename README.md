@@ -83,3 +83,9 @@ Ushol Mama crowd-shipping platform.
 
 - Added backend authentication controllers and Express API routes for manual and Google sign-in.
 
+- Standardized brand identity with custom 3D isometric vector logo and permanent English lockup.
+
+- Overhauled primary navigation bar with Deep Midnight & Emerald Slate executive theme.
+
+- Added keyboard accessibility and ARIA semantics across navigation flyouts and modals.
+
