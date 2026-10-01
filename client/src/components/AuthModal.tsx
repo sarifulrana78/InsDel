@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import { isValidBangladeshiPhone, isValidEmail, checkPasswordStrength } from '@/utils/authUtils';
+import { Logo3DMark } from '@/components/Logo';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -212,8 +213,8 @@ export function AuthModal({ isOpen, onClose, language: propLang, initialMode = '
           
           {/* Logo & Headline */}
           <div className="flex flex-col items-center text-center mb-5">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center font-black text-white text-2xl shadow-lg mb-2 shadow-emerald-500/20 ring-2 ring-emerald-500/20">
-              উ
+            <div className="mb-2.5">
+              <Logo3DMark size={50} />
             </div>
             <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
               {mode === 'login' 
