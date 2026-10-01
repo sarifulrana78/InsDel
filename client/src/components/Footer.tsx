@@ -32,6 +32,7 @@ import {
 } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import SafetyDeclarationModal from './SafetyDeclarationModal';
+import Logo, { Logo3DMark } from '@/components/Logo';
 
 export default function Footer() {
   const { language } = useApp();
@@ -109,24 +110,7 @@ export default function Footer() {
             
             {/* Column 1: Brand & Mission */}
             <div className="space-y-5">
-              <Link 
-                href="/" 
-                onClick={scrollToTop} 
-                className="inline-flex items-center space-x-3 group cursor-pointer focus:outline-none"
-                title={language === 'BN' ? 'হোমে ফিরে যান' : 'Go to Homepage'}
-              >
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center font-black text-white text-xl shadow-md shadow-emerald-500/20 group-hover:scale-105 group-hover:shadow-emerald-500/40 transition-all duration-300">
-                  উ
-                </div>
-                <div>
-                  <span className="text-xl font-black text-slate-900 group-hover:text-emerald-700 transition">
-                    Ushol Mama
-                  </span>
-                  <span className="text-[10px] font-bold text-emerald-600 tracking-wider uppercase block">
-                    {language === 'BN' ? 'কমিউটার ক্রাউড-শিপিং' : 'Commuter Logistics'}
-                  </span>
-                </div>
-              </Link>
+              <Logo size="md" onClick={scrollToTop} />
 
               <p className="text-sm text-slate-600 leading-relaxed font-normal">
                 {language === 'BN' 
@@ -356,9 +340,7 @@ export default function Footer() {
             {/* Modal Header */}
             <div className="p-6 sm:p-8 border-b border-slate-100 flex items-center justify-between sticky top-0 bg-white/95 backdrop-blur-md z-10">
               <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 rounded-2xl bg-emerald-600 flex items-center justify-center text-white font-black text-xl shadow-md shadow-emerald-500/20">
-                  উ
-                </div>
+                <Logo3DMark size={40} />
                 <div>
                   <h3 className="text-xl font-black text-slate-900">
                     {language === 'BN' ? 'আমাদের সম্পর্কে (About Ushol Mama)' : 'About Ushol Mama'}
