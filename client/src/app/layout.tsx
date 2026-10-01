@@ -18,8 +18,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Ushol Mama | ঢাকা'র ১ম কমিউটার ক্রাউড-শিপিং প্ল্যাটফর্ম",
+  title: "Ushol Mama | Commuter Crowd-Shipping Network",
   description: "মেট্রোরেল বা বাসে যাতায়াতের পথে ছোট পার্সেল নিয়ে নিজের ভাড়া উসুল করুন। ১০০% NID ভেরিফাইড ও সুরক্ষিত এসক্রো পেমেন্ট।",
+  icons: {
+    icon: '/logo.svg',
+    shortcut: '/logo.svg',
+    apple: '/logo.svg',
+  }
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
