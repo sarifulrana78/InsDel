@@ -1,0 +1,102 @@
+<svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="ambGroundShadow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#022c22" stop-opacity="0.55" />
+      <stop offset="55%" stop-color="#047857" stop-opacity="0.22" />
+      <stop offset="100%" stop-color="#047857" stop-opacity="0" />
+    </radialGradient>
+
+    <linearGradient id="topFaceGlow" x1="14" y1="12" x2="106" y2="58" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#a7f3d0" />
+      <stop offset="30%" stop-color="#34d399" />
+      <stop offset="80%" stop-color="#10b981" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+
+    <linearGradient id="leftFaceVibrant" x1="14" y1="34" x2="60" y2="106" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#10b981" />
+      <stop offset="45%" stop-color="#059669" />
+      <stop offset="100%" stop-color="#047857" />
+    </linearGradient>
+
+    <linearGradient id="rightFaceShadow" x1="60" y1="58" x2="106" y2="106" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#047857" />
+      <stop offset="40%" stop-color="#065f46" />
+      <stop offset="85%" stop-color="#022c22" />
+      <stop offset="100%" stop-color="#011b14" />
+    </linearGradient>
+
+    <linearGradient id="expressTapeGrad" x1="50" y1="14" x2="70" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.9" />
+      <stop offset="40%" stop-color="#67e8f9" stop-opacity="0.85" />
+      <stop offset="100%" stop-color="#34d399" stop-opacity="0.8" />
+    </linearGradient>
+
+    <linearGradient id="specularGlint" x1="20" y1="14" x2="60" y2="50" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.8" />
+      <stop offset="50%" stop-color="#ffffff" stop-opacity="0.25" />
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+    </linearGradient>
+
+    <linearGradient id="uPillarLeft" x1="26" y1="46" x2="44" y2="88" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="40%" stop-color="#f0fdf4" />
+      <stop offset="100%" stop-color="#a7f3d0" />
+    </linearGradient>
+
+    <linearGradient id="uPillarRight" x1="74" y1="62" x2="94" y2="96" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#d1fae5" />
+      <stop offset="50%" stop-color="#6ee7b7" />
+      <stop offset="100%" stop-color="#10b981" />
+    </linearGradient>
+
+    <linearGradient id="uBaseArc" x1="36" y1="78" x2="84" y2="102" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="50%" stop-color="#6ee7b7" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+
+    <linearGradient id="uCavityShadow" x1="30" y1="58" x2="60" y2="102" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#011b14" stop-opacity="0.85" />
+      <stop offset="100%" stop-color="#064e3b" stop-opacity="0.95" />
+    </linearGradient>
+
+    <filter id="coreNeonGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="3.5" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- 1. Ground Contact Shadow -->
+  <ellipse cx="60" cy="111" rx="42" ry="7.5" fill="url(#ambGroundShadow)" />
+
+  <!-- 2. 3D Isometric Parcel Container -->
+  <path d="M14 34 L60 58 L60 106 L14 82 Z" fill="url(#leftFaceVibrant)" />
+  <path d="M60 58 L106 34 L106 82 L60 106 Z" fill="url(#rightFaceShadow)" />
+  <path d="M60 10 L106 34 L60 58 L14 34 Z" fill="url(#topFaceGlow)" />
+  <path d="M60 12 L96 31 L60 48 L24 30 Z" fill="url(#specularGlint)" />
+
+  <!-- Top Center Express Tape -->
+  <path d="M54 13.2 L66 19.5 L66 48.5 L54 42.2 Z" fill="url(#expressTapeGrad)" />
+  <path d="M58 24 L62 26.2 L58 28.5" stroke="#064e3b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M58 33 L62 35.2 L58 37.5" stroke="#064e3b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+
+  <!-- 3. Crisp Bevel Highlights -->
+  <line x1="14" y1="34" x2="60" y2="10" stroke="#ffffff" stroke-width="1.8" stroke-opacity="0.8" />
+  <line x1="60" y1="10" x2="106" y2="34" stroke="#a7f3d0" stroke-width="1.6" stroke-opacity="0.7" />
+  <line x1="60" y1="58" x2="60" y2="106" stroke="#34d399" stroke-width="1.8" stroke-opacity="0.5" />
+
+  <!-- 4. Sculpted 3D U Monogram -->
+  <path d="M30 48 L42 54.5 L42 78 Q42 87 60 93 Q78 87 78 78 L78 54.5 L90 48 L90 78 Q90 98 60 104 Q30 98 30 78 Z" fill="url(#uCavityShadow)" />
+  <path d="M29 46 L41 52.5 L41 77 Q41 83 52 87.5 L52 94.5 Q38 91 29 80 Z" fill="url(#uPillarLeft)" />
+  <path d="M79 52.5 L91 46 L91 80 Q82 91 68 94.5 L68 87.5 Q79 83 79 77 Z" fill="url(#uPillarRight)" />
+  <path d="M41 77 Q41 88 60 93.5 Q79 88 79 77 L91 80 Q91 97 60 103 Q29 97 29 80 Z" fill="url(#uBaseArc)" />
+  <path d="M33 48 L38 51 L38 76 Q38 85 60 90 Q82 85 82 76 L82 51 L87 48" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.9" />
+
+  <!-- 5. Glowing Commuter Core -->
+  <circle cx="60" cy="74" r="5" fill="#34d399" filter="url(#coreNeonGlow)" />
+  <circle cx="60" cy="74" r="2.8" fill="#ffffff" />
+
+  <!-- Top-Left Glint Flare -->
+  <path d="M17 32 L18.5 27 L20 32 L25 33.5 L20 35 L18.5 40 L17 35 L12 33.5 Z" fill="#ffffff" opacity="0.95" />
+</svg>
