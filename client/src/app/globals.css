@@ -24,3 +24,19 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* 3D Logo Dynamics */
+.logo-3d-wrapper {
+  perspective: 600px;
+}
+
+.logo-3d-mark {
+  transform-style: preserve-3d;
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.4s ease;
+}
+
+.group:hover .logo-3d-mark {
+  transform: rotateY(-10deg) rotateX(10deg) translateY(-2px) scale(1.05);
+  filter: drop-shadow(0 14px 22px rgba(16, 185, 129, 0.35)) !important;
+}
+
