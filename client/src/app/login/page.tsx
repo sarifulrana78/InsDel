@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { useApp, DEMO_USERS } from '@/context/AppContext';
 import { isValidBangladeshiPhone, isValidEmail } from '@/utils/authUtils';
+import Logo from '@/components/Logo';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -230,20 +231,8 @@ export default function LoginPage() {
               <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
 
               <div>
-                {/* Brand Logo */}
-                <div className="flex items-center space-x-3 mb-8">
-                  <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center font-black text-white text-2xl shadow-lg shadow-emerald-500/30 ring-2 ring-white/10">
-                    উ
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-black tracking-tight leading-none text-white">
-                      Ushol Mama
-                    </h3>
-                    <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest mt-1 block">
-                      {language === 'BN' ? 'ঢাকা মেট্রোরেল ক্রাউড-শিপিং' : 'Dhaka Metro Crowd-Shipping'}
-                    </span>
-                  </div>
-                </div>
+                {/* Brand Logo - ALWAYS ENGLISH & 3D */}
+                <Logo theme="dark" size="lg" className="mb-8" />
 
                 {/* Metro Line 6 Live Pill */}
                 <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 font-bold text-[11px] mb-6 border border-emerald-500/30">
