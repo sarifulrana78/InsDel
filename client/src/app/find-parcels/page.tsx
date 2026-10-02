@@ -344,7 +344,7 @@ export default function FindParcelsPage() {
                 {language === 'BN' ? 'ডেলিভারি সফলভাবে গৃহীত হয়েছে!' : 'Delivery Accepted!'}
               </span>
               <h3 className="text-xl font-black text-slate-900 mt-1">
-                {acceptedModalParcel.title}
+                {getLocalizedParcelText(acceptedModalParcel, language).title}
               </h3>
               <p className="text-xs text-slate-500 mt-1">
                 {acceptedModalParcel.pickupLocation} ➔ {acceptedModalParcel.dropoffLocation}
@@ -352,11 +352,13 @@ export default function FindParcelsPage() {
             </div>
 
             <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-left text-xs space-y-2">
-              <p className="font-bold text-slate-700">পরবর্তী পদক্ষেপ (Next Steps):</p>
+              <p className="font-bold text-slate-700">
+                {language === 'BN' ? 'পরবর্তী পদক্ষেপ (Next Steps):' : 'Next Steps:'}
+              </p>
               <ul className="space-y-1.5 text-slate-600 text-[11px]">
-                <li>১. পিকআপ স্টেশনের গেটে প্রেরকের সাথে দেখা করুন।</li>
-                <li>২. পার্সেলটি স্বচক্ষে দেখে ইনস্পেকশন সম্পন্ন করুন।</li>
-                <li>৩. প্রেরকের কাছ থেকে ৪-সংখ্যার পিকআপ OTP নিয়ে ইনপুট দিন।</li>
+                <li>{language === 'BN' ? '১. পিকআপ স্টেশনের গেটে প্রেরকের সাথে দেখা করুন।' : '1. Meet the sender at the pickup station gate.'}</li>
+                <li>{language === 'BN' ? '২. পার্সেলটি স্বচক্ষে দেখে ইনস্পেকশন সম্পন্ন করুন।' : '2. Visually inspect open contents for safety verification.'}</li>
+                <li>{language === 'BN' ? '৩. প্রেরকের কাছ থেকে ৪-সংখ্যার পিকআপ OTP নিয়ে ইনপুট দিন।' : '3. Collect and submit the 4-digit pickup OTP from the sender.'}</li>
               </ul>
             </div>
 
