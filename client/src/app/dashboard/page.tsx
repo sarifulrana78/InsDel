@@ -326,25 +326,25 @@ export default function Dashboard() {
                     </div>
                   </div>
 
-                {/* Stepper Progress Bar */}
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between text-xs font-bold">
-                    <span className={parcel.status === 'accepted' ? 'text-emerald-600' : 'text-slate-400'}>
-                      {language === 'BN' ? '১. স্টেশনে পিকআপ' : '1. Station Pickup'}
-                    </span>
-                    <span className={parcel.status === 'picked_up' ? 'text-emerald-600' : 'text-slate-400'}>
-                      {language === 'BN' ? '২. মেট্রোতে অন-ট্রানজিট' : '2. In-Transit Commute'}
-                    </span>
-                    <span className={parcel.status === 'arrived_at_destination' ? 'text-emerald-600' : 'text-slate-400'}>
-                      {language === 'BN' ? '৩. গন্তব্যে আগমন' : '3. Destination Arrived'}
-                    </span>
-                    <span className={parcel.status === 'delivered' ? 'text-emerald-600' : 'text-slate-400'}>
-                      {language === 'BN' ? '৪. সফল হ্যান্ডওভার' : '4. Completed Handover'}
-                    </span>
-                  </div>
-                  <div className="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
-                    <div 
-                      className="bg-emerald-500 h-full transition-all duration-500"
+                  {/* Stepper Progress Bar */}
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between text-xs font-bold">
+                      <span className={parcel.status === 'accepted' ? 'text-emerald-600' : 'text-slate-400'}>
+                        {language === 'BN' ? '১. স্টেশনে পিকআপ' : '1. Station Pickup'}
+                      </span>
+                      <span className={parcel.status === 'picked_up' ? 'text-emerald-600' : 'text-slate-400'}>
+                        {language === 'BN' ? '২. মেট্রোতে অন-ট্রানজিট' : '2. In-Transit Commute'}
+                      </span>
+                      <span className={parcel.status === 'arrived_at_destination' ? 'text-emerald-600' : 'text-slate-400'}>
+                        {language === 'BN' ? '৩. গন্তব্যে আগমন' : '3. Destination Arrived'}
+                      </span>
+                      <span className={parcel.status === 'delivered' ? 'text-emerald-600' : 'text-slate-400'}>
+                        {language === 'BN' ? '৪. সফল হ্যান্ডওভার' : '4. Completed Handover'}
+                      </span>
+                    </div>
+                    <div className="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                      <div 
+                        className="bg-emerald-500 h-full transition-all duration-500"
                       style={{
                         width: 
                           parcel.status === 'accepted' ? '25%' :
@@ -509,6 +509,7 @@ export default function Dashboard() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {displayedParcels.map((parcel) => {
               const isSenderOfParcel = parcel.senderId === user.id;
+              const loc = getLocalizedParcelText(parcel, language);
 
               return (
                 <div
@@ -520,7 +521,7 @@ export default function Dashboard() {
                     {/* Top Row: Category & Status */}
                     <div className="flex items-center justify-between">
                       <span className="px-3 py-1 bg-slate-100 text-slate-700 text-xs font-bold rounded-full capitalize">
-                        {parcel.category}
+                        {loc.category}
                       </span>
 
                       {/* Status Badges */}
@@ -544,10 +545,10 @@ export default function Dashboard() {
                     {/* Title & Description */}
                     <div>
                       <h4 className="text-base font-black text-slate-900 group-hover:text-emerald-600 transition">
-                        {parcel.title}
+                        {loc.title}
                       </h4>
                       <p className="text-xs text-slate-500 mt-1 line-clamp-2 leading-relaxed">
-                        {parcel.description}
+                        {loc.description}
                       </p>
                     </div>
 
@@ -556,7 +557,9 @@ export default function Dashboard() {
                       <div className="flex items-start space-x-2">
                         <div className="w-2 h-2 rounded-full bg-blue-500 mt-1 shrink-0" />
                         <div>
-                          <span className="text-[10px] text-slate-400 block font-bold uppercase">পিকআপ (Pickup)</span>
+                          <span className="text-[10px] text-slate-400 block font-bold uppercase">
+                            {language === 'BN' ? 'পিকআপ (Pickup)' : 'PICKUP'}
+                          </span>
                           <span className="font-bold text-slate-700">{parcel.pickupLocation}</span>
                         </div>
                       </div>
@@ -564,7 +567,9 @@ export default function Dashboard() {
                       <div className="flex items-start space-x-2">
                         <div className="w-2 h-2 rounded-full bg-emerald-500 mt-1 shrink-0" />
                         <div>
-                          <span className="text-[10px] text-slate-400 block font-bold uppercase">ড্রপঅফ (Dropoff)</span>
+                          <span className="text-[10px] text-slate-400 block font-bold uppercase">
+                            {language === 'BN' ? 'ড্রপঅফ (Dropoff)' : 'DROPOFF'}
+                          </span>
                           <span className="font-bold text-slate-700">{parcel.dropoffLocation}</span>
                         </div>
                       </div>
@@ -576,7 +581,7 @@ export default function Dashboard() {
                         <div className="flex items-center justify-between text-xs">
                           <span className="font-bold text-slate-600 flex items-center gap-1">
                             <KeyRound className="w-3.5 h-3.5 text-emerald-600" />
-                            পিকআপ ওটিপি (Pickup OTP):
+                            {language === 'BN' ? 'পিকআপ ওটিপি (Pickup OTP):' : 'Pickup OTP:'}
                           </span>
                           <span className="font-black text-sm text-emerald-700 bg-white px-2 py-0.5 rounded border border-emerald-300">
                             {parcel.pickupOTP}
@@ -585,14 +590,16 @@ export default function Dashboard() {
                         <div className="flex items-center justify-between text-xs">
                           <span className="font-bold text-slate-600 flex items-center gap-1">
                             <KeyRound className="w-3.5 h-3.5 text-cyan-600" />
-                            প্রাপকের ওটিপি (Dropoff OTP):
+                            {language === 'BN' ? 'প্রাপকের ওটিপি (Dropoff OTP):' : 'Dropoff OTP:'}
                           </span>
                           <span className="font-black text-sm text-cyan-700 bg-white px-2 py-0.5 rounded border border-cyan-300">
                             {parcel.dropoffOTP}
                           </span>
                         </div>
                         <p className="text-[10px] text-emerald-800 leading-tight">
-                          * যাত্রীর হাতে পার্সেল তুলে দেওয়ার সময় পিকআপ ওটিপি দিন। প্রাপককে ডেলিভারি ওটিপি বা কিউআর কোড পাঠান।
+                          {language === 'BN'
+                            ? '* যাত্রীর হাতে পার্সেল তুলে দেওয়ার সময় পিকআপ ওটিপি দিন। প্রাপককে ডেলিভারি ওটিপি বা কিউআর কোড পাঠান।'
+                            : '* Share pickup OTP with commuter at handover. Provide dropoff OTP or QR code to recipient.'}
                         </p>
                       </div>
                     )}
@@ -600,11 +607,15 @@ export default function Dashboard() {
                     {/* Price & Payout */}
                     <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-xs">
                       <div>
-                        <span className="text-slate-400 block text-[10px]">ঘোষিত মূল্য (Valuation)</span>
+                        <span className="text-slate-400 block text-[10px]">
+                          {language === 'BN' ? 'ঘোষিত মূল্য (Valuation)' : 'Declared Value'}
+                        </span>
                         <span className="font-bold text-slate-700">৳ {parcel.declaredValueBDT}</span>
                       </div>
                       <div className="text-right">
-                        <span className="text-slate-400 block text-[10px]">কমিউটার ভাড়া (Payout)</span>
+                        <span className="text-slate-400 block text-[10px]">
+                          {language === 'BN' ? 'কমিউটার ভাড়া (Payout)' : 'Commuter Payout'}
+                        </span>
                         <span className="font-black text-base text-emerald-600">৳ {parcel.payoutBDT}</span>
                       </div>
                     </div>
@@ -618,7 +629,7 @@ export default function Dashboard() {
                     <button
                       onClick={() => setSelectedParcelForQR(parcel)}
                       className="p-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 transition"
-                      title="ডেলিভারি QR কোড দেখুন"
+                      title={language === 'BN' ? 'ডেলিভারি QR কোড দেখুন' : 'View Delivery QR Code'}
                     >
                       <QrCode className="w-4 h-4 text-emerald-600" />
                     </button>
@@ -718,7 +729,7 @@ export default function Dashboard() {
                   {language === 'BN' ? 'ওপেন-বক্স ইনস্পেকশন ও পিকআপ' : 'Open-Box Inspection & Pickup'}
                 </h3>
                 <p className="text-xs text-slate-500">
-                  ID: {inspectionParcel.id} • {inspectionParcel.title}
+                  ID: {inspectionParcel.id} • {getLocalizedParcelText(inspectionParcel, language).title}
                 </p>
               </div>
             </div>

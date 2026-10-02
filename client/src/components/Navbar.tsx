@@ -28,6 +28,7 @@ import {
   Radio
 } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
+import { getLocalizedParcelText } from '@/utils/parcelUtils';
 import { AuthModal } from '@/components/AuthModal';
 import Logo from '@/components/Logo';
 
@@ -327,7 +328,9 @@ export default function Navbar() {
                               className="block p-2.5 rounded-xl bg-slate-800/60 hover:bg-slate-800 border border-slate-700/60 transition group"
                             >
                               <div className="flex items-center justify-between text-[11px] font-bold text-slate-200 mb-1">
-                                <span className="truncate max-w-[170px]">{p.title}</span>
+                                <span className="truncate max-w-[170px]">
+                                  {getLocalizedParcelText(p, language).title}
+                                </span>
                                 <span className="text-emerald-400 font-black">৳{p.payoutBDT}</span>
                               </div>
                               <div className="flex items-center justify-between text-[10px] text-slate-400">
