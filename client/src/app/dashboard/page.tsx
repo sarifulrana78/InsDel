@@ -29,6 +29,7 @@ import {
   Award
 } from 'lucide-react';
 import { useApp, ParcelItem } from '@/context/AppContext';
+import { getLocalizedParcelText } from '@/utils/parcelUtils';
 import RecipientQRModal from '@/components/RecipientQRModal';
 import SafetyDeclarationModal from '@/components/SafetyDeclarationModal';
 
@@ -270,73 +271,75 @@ export default function Dashboard() {
           </div>
 
           <div className="grid gap-6">
-            {commuterActiveParcels.map((parcel) => (
-              <div 
-                key={parcel.id}
-                className="bg-white rounded-3xl border-2 border-emerald-500/40 shadow-lg shadow-emerald-500/5 p-6 sm:p-8 space-y-6"
-              >
-                {/* Header */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
-                  <div>
-                    <div className="flex items-center space-x-2">
-                      <span className="px-3 py-1 rounded-full text-xs font-black uppercase bg-emerald-100 text-emerald-800">
-                        {parcel.category}
-                      </span>
-                      <span className="text-xs font-bold text-slate-400">ID: {parcel.id}</span>
-                      <span className="text-xs font-bold text-emerald-600 flex items-center gap-1">
-                        <ShieldCheck className="w-3.5 h-3.5" /> ১০০% সুরক্ষিত এসক্রো
-                      </span>
-                    </div>
-                    <h3 className="text-xl font-black text-slate-900 mt-1">{parcel.title}</h3>
-                  </div>
-
-                  <div className="text-left sm:text-right">
-                    <span className="text-xs font-semibold text-slate-500 block">
-                      {language === 'BN' ? 'আপনার আয় (পেমেন্ট)' : 'Your Earnings'}
-                    </span>
-                    <span className="text-2xl font-black text-emerald-600">৳ {parcel.payoutBDT}</span>
-                  </div>
-                </div>
-
-                {/* Route */}
-                <div className="grid sm:grid-cols-2 gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                  <div className="flex items-start space-x-3">
-                    <div className="mt-1 w-3 h-3 rounded-full bg-blue-500 ring-4 ring-blue-100 shrink-0" />
+            {commuterActiveParcels.map((parcel) => {
+              const loc = getLocalizedParcelText(parcel, language);
+              return (
+                <div 
+                  key={parcel.id}
+                  className="bg-white rounded-3xl border-2 border-emerald-500/40 shadow-lg shadow-emerald-500/5 p-6 sm:p-8 space-y-6"
+                >
+                  {/* Header */}
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
                     <div>
-                      <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-                        {language === 'BN' ? 'পিকআপ পয়েন্ট (প্রেরক)' : 'Pickup Station (Sender)'}
-                      </p>
-                      <p className="text-sm font-bold text-slate-800">{parcel.pickupLocation}</p>
-                      <p className="text-xs text-slate-500">{parcel.senderName} • 📞 {parcel.senderPhone}</p>
+                      <div className="flex items-center space-x-2">
+                        <span className="px-3 py-1 rounded-full text-xs font-black uppercase bg-emerald-100 text-emerald-800">
+                          {loc.category}
+                        </span>
+                        <span className="text-xs font-bold text-slate-400">ID: {parcel.id}</span>
+                        <span className="text-xs font-bold text-emerald-600 flex items-center gap-1">
+                          <ShieldCheck className="w-3.5 h-3.5" /> {language === 'BN' ? '১০০% সুরক্ষিত এসক্রো' : '100% Escrow Secured'}
+                        </span>
+                      </div>
+                      <h3 className="text-xl font-black text-slate-900 mt-1">{loc.title}</h3>
+                    </div>
+
+                    <div className="text-left sm:text-right">
+                      <span className="text-xs font-semibold text-slate-500 block">
+                        {language === 'BN' ? 'আপনার আয় (পেমেন্ট)' : 'Your Earnings'}
+                      </span>
+                      <span className="text-2xl font-black text-emerald-600">৳ {parcel.payoutBDT}</span>
                     </div>
                   </div>
 
-                  <div className="flex items-start space-x-3">
-                    <div className="mt-1 w-3 h-3 rounded-full bg-emerald-500 ring-4 ring-emerald-100 shrink-0" />
-                    <div>
-                      <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-                        {language === 'BN' ? 'ড্রপঅফ পয়েন্ট (প্রাপক)' : 'Dropoff Station (Recipient)'}
-                      </p>
-                      <p className="text-sm font-bold text-slate-800">{parcel.dropoffLocation}</p>
-                      <p className="text-xs text-slate-500">{parcel.recipientName} • 📞 {parcel.recipientPhone}</p>
+                  {/* Route */}
+                  <div className="grid sm:grid-cols-2 gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                    <div className="flex items-start space-x-3">
+                      <div className="mt-1 w-3 h-3 rounded-full bg-blue-500 ring-4 ring-blue-100 shrink-0" />
+                      <div>
+                        <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                          {language === 'BN' ? 'পিকআপ পয়েন্ট (প্রেরক)' : 'Pickup Station (Sender)'}
+                        </p>
+                        <p className="text-sm font-bold text-slate-800">{parcel.pickupLocation}</p>
+                        <p className="text-xs text-slate-500">{loc.senderName} • 📞 {parcel.senderPhone}</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start space-x-3">
+                      <div className="mt-1 w-3 h-3 rounded-full bg-emerald-500 ring-4 ring-emerald-100 shrink-0" />
+                      <div>
+                        <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                          {language === 'BN' ? 'ড্রপঅফ পয়েন্ট (প্রাপক)' : 'Dropoff Station (Recipient)'}
+                        </p>
+                        <p className="text-sm font-bold text-slate-800">{parcel.dropoffLocation}</p>
+                        <p className="text-xs text-slate-500">{loc.recipientName} • 📞 {parcel.recipientPhone}</p>
+                      </div>
                     </div>
                   </div>
-                </div>
 
                 {/* Stepper Progress Bar */}
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-xs font-bold">
                     <span className={parcel.status === 'accepted' ? 'text-emerald-600' : 'text-slate-400'}>
-                      ১. স্টেশনে পিকআপ
+                      {language === 'BN' ? '১. স্টেশনে পিকআপ' : '1. Station Pickup'}
                     </span>
                     <span className={parcel.status === 'picked_up' ? 'text-emerald-600' : 'text-slate-400'}>
-                      ২. মেট্রোতে অন-ট্রানজিট
+                      {language === 'BN' ? '২. মেট্রোতে অন-ট্রানজিট' : '2. In-Transit Commute'}
                     </span>
                     <span className={parcel.status === 'arrived_at_destination' ? 'text-emerald-600' : 'text-slate-400'}>
-                      ৩. গন্তব্যে আগমন
+                      {language === 'BN' ? '৩. গন্তব্যে আগমন' : '3. Destination Arrived'}
                     </span>
                     <span className={parcel.status === 'delivered' ? 'text-emerald-600' : 'text-slate-400'}>
-                      ৪. সফল হ্যান্ডওভার
+                      {language === 'BN' ? '৪. সফল হ্যান্ডওভার' : '4. Completed Handover'}
                     </span>
                   </div>
                   <div className="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
@@ -411,7 +414,8 @@ export default function Dashboard() {
                 </div>
 
               </div>
-            ))}
+            );
+          })}
           </div>
         </div>
       )}
