@@ -17,6 +17,7 @@ import {
   DollarSign
 } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
+import { getLocalizedParcelText } from '@/utils/parcelUtils';
 
 export default function FindParcelsPage() {
   const router = useRouter();
@@ -68,11 +69,13 @@ export default function FindParcelsPage() {
     }
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
-      const matchTitle = p.title.toLowerCase().includes(q);
-      const matchDesc = p.description.toLowerCase().includes(q);
+      const loc = getLocalizedParcelText(p, language);
+      const matchTitle = p.title.toLowerCase().includes(q) || (p.titleEn && p.titleEn.toLowerCase().includes(q)) || loc.title.toLowerCase().includes(q);
+      const matchDesc = p.description.toLowerCase().includes(q) || (p.descriptionEn && p.descriptionEn.toLowerCase().includes(q)) || loc.description.toLowerCase().includes(q);
       const matchPickup = p.pickupLocation.toLowerCase().includes(q);
       const matchDrop = p.dropoffLocation.toLowerCase().includes(q);
-      if (!matchTitle && !matchDesc && !matchPickup && !matchDrop) return false;
+      const matchSender = p.senderName.toLowerCase().includes(q) || (p.senderNameEn && p.senderNameEn.toLowerCase().includes(q)) || loc.senderName.toLowerCase().includes(q);
+      if (!matchTitle && !matchDesc && !matchPickup && !matchDrop && !matchSender) return false;
     }
 
     return true;
@@ -173,11 +176,11 @@ export default function FindParcelsPage() {
               className="w-full px-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 capitalize"
             >
               <option value="all">{language === 'BN' ? 'সকল ক্যাটাগরি' : 'All Categories'}</option>
-              <option value="electronics">Electronics (ইলেকট্রনিক্স)</option>
-              <option value="documents">Documents (ডকুমেন্টস)</option>
-              <option value="clothing">Clothing (পোশাক)</option>
-              <option value="food">Food (খাবার)</option>
-              <option value="other">Other (অন্যান্য)</option>
+              <option value="clothing">{language === 'BN' ? 'পোশাক (Clothing)' : 'Clothing'}</option>
+              <option value="food">{language === 'BN' ? 'খাবার (Food)' : 'Food'}</option>
+              <option value="documents">{language === 'BN' ? 'ডকুমেন্টস (Documents)' : 'Documents'}</option>
+              <option value="electronics">{language === 'BN' ? 'ইলেকট্রনিক্স (Electronics)' : 'Electronics'}</option>
+              <option value="other">{language === 'BN' ? 'অন্যান্য (Other)' : 'Other'}</option>
             </select>
           </div>
 
