@@ -28,7 +28,9 @@ export interface ParcelTimelineEvent {
 export interface ParcelItem {
   id: string;
   title: string;
+  titleEn?: string;
   description: string;
+  descriptionEn?: string;
   category: 'electronics' | 'documents' | 'clothing' | 'food' | 'other';
   declaredValueBDT: number;
   payoutBDT: number;
@@ -36,11 +38,14 @@ export interface ParcelItem {
   dropoffLocation: string;
   senderId: string;
   senderName: string;
+  senderNameEn?: string;
   senderPhone: string;
   recipientName: string;
+  recipientNameEn?: string;
   recipientPhone: string;
   commuterId?: string;
   commuterName?: string;
+  commuterNameEn?: string;
   commuterPhone?: string;
   status: 'pending' | 'accepted' | 'picked_up' | 'arrived_at_destination' | 'delivered' | 'cancelled' | 'reported';
   pickupOTP: string;
@@ -48,6 +53,8 @@ export interface ParcelItem {
   inspectionPhotoUrl?: string;
   deliveryProofPhotoUrl?: string;
   createdAt: string;
+  weight?: string;
+  weightEn?: string;
   timeline: ParcelTimelineEvent[];
 }
 
