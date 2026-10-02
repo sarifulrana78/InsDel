@@ -309,7 +309,26 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
       const storedParcels = localStorage.getItem('ushol_parcels');
       if (storedParcels) {
-        setParcels(JSON.parse(storedParcels));
+        const parsed: ParcelItem[] = JSON.parse(storedParcels);
+        // Merge with initial parcels to ensure localized fields exist
+        const enriched = parsed.map(p => {
+          const init = INITIAL_PARCELS.find(ip => ip.id === p.id);
+          if (init) {
+            return {
+              ...init,
+              ...p,
+              titleEn: p.titleEn || init.titleEn,
+              descriptionEn: p.descriptionEn || init.descriptionEn,
+              senderNameEn: p.senderNameEn || init.senderNameEn,
+              recipientNameEn: p.recipientNameEn || init.recipientNameEn,
+              commuterNameEn: p.commuterNameEn || init.commuterNameEn,
+              weight: p.weight || init.weight,
+              weightEn: p.weightEn || init.weightEn
+            };
+          }
+          return p;
+        });
+        setParcels(enriched);
       } else {
         localStorage.setItem('ushol_parcels', JSON.stringify(INITIAL_PARCELS));
       }
