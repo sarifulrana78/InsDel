@@ -89,3 +89,9 @@ Ushol Mama crowd-shipping platform.
 
 - Added keyboard accessibility and ARIA semantics across navigation flyouts and modals.
 
+- Implemented dynamic English card localization for parcels with automated English/Bangla dictionary mapping.
+
+- Extended search query engine to support simultaneous bilingual keyword searching.
+
+- Localized commuter mission transit progression steppers and dual-OTP security dialogs.
+

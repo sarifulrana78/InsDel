@@ -47,5 +47,13 @@
 - Deep Midnight & Emerald Slate Navigation: Redesigned the primary Navbar into a high-end executive dark theme (`slate-950/95` and `slate-900/90`) with ambient emerald horizon glow, dark glass center navigation pill, and refined CTAs.
 - Cohesive Component Integration: Updated AuthModal, Footer, About Us modal, and /login page with standardized 3D branding.
 - Enhanced Accessibility: Added keyboard Escape listener for flyouts and standard ARIA attributes (`aria-haspopup`, `aria-expanded`, `aria-label`).
+## Update 15 - 10/02/2026 23:05:00
+- Dynamic English Parcel Card Localization: Overhauled the parcel card presentation layer so that all card components render pure English letters and typography when English language is active.
+- Universal Localization Utility (`parcelUtils.ts`): Built a robust localization engine (`getLocalizedParcelText`) providing full bilingual dictionary mappings for seed and custom parcels, item categories, sender initials, and weights.
+- Multi-Language Route Filtering & Search: Upgraded the station and category filters on `/find-parcels` with clean English labels and extended the search query matching to evaluate both English and Bengali fields.
+- Active Commuter Mission Steppers: Localized the 4-step commute transit progression bar, route pickup/dropoff points, and valuation metrics on `/dashboard`.
+- Dual OTP & Inspection Modals: Localized sender secret pickup/dropoff OTP instructions, physical open-box parcel inspection dialogs, and accepted parcel safety declarations.
+- Seamless LocalStorage Cache Rehydration: Added automated state enrichment on application mount so previously cached `ushol_parcels` in browser storage seamlessly receive the new localized properties without requiring a cache reset.
+
 
 
