@@ -239,85 +239,94 @@ export default function FindParcelsPage() {
         </div>
       ) : (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {availableParcels.map((parcel) => (
-            <div
-              key={parcel.id}
-              className="bg-white rounded-3xl border border-slate-200 shadow-sm hover:shadow-lg transition-all p-6 flex flex-col justify-between space-y-5 group"
-            >
-              <div className="space-y-4">
-                
-                {/* Header */}
-                <div className="flex items-center justify-between">
-                  <span className="px-3 py-1 bg-emerald-100 text-emerald-800 text-xs font-bold rounded-full capitalize">
-                    {parcel.category}
-                  </span>
-                  <div className="text-right">
-                    <span className="text-[10px] text-slate-400 block font-semibold">আপনার ইনকাম</span>
-                    <span className="text-2xl font-black text-emerald-600">৳ {parcel.payoutBDT}</span>
-                  </div>
-                </div>
-
-                {/* Title & Desc */}
-                <div>
-                  <h3 className="text-base font-black text-slate-900 group-hover:text-emerald-600 transition">
-                    {parcel.title}
-                  </h3>
-                  <p className="text-xs text-slate-500 mt-1 line-clamp-2 leading-relaxed">
-                    {parcel.description}
-                  </p>
-                </div>
-
-                {/* Route */}
-                <div className="space-y-2 bg-slate-50/80 p-3.5 rounded-2xl border border-slate-100 text-xs">
-                  <div className="flex items-start space-x-2">
-                    <div className="w-2 h-2 rounded-full bg-blue-500 mt-1 shrink-0" />
-                    <div>
-                      <span className="text-[10px] text-slate-400 block font-bold uppercase">পিকআপ (Pickup)</span>
-                      <span className="font-bold text-slate-800">{parcel.pickupLocation}</span>
-                    </div>
-                  </div>
-                  <div className="border-l-2 border-dashed border-slate-300 ml-1 h-3" />
-                  <div className="flex items-start space-x-2">
-                    <div className="w-2 h-2 rounded-full bg-emerald-500 mt-1 shrink-0" />
-                    <div>
-                      <span className="text-[10px] text-slate-400 block font-bold uppercase">ড্রপঅফ (Dropoff)</span>
-                      <span className="font-bold text-slate-800">{parcel.dropoffLocation}</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Sender Trust & Safety */}
-                <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-xs">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-6 h-6 rounded-full bg-slate-200 text-slate-700 font-bold flex items-center justify-center text-[10px]">
-                      {parcel.senderName.slice(0, 1)}
-                    </div>
-                    <div>
-                      <span className="font-bold text-slate-700 block text-[11px]">{parcel.senderName}</span>
-                      <span className="text-[10px] text-emerald-600 font-semibold flex items-center gap-0.5">
-                        <CheckCircle2 className="w-2.5 h-2.5 inline" /> Porichoy NID Verified
+          {availableParcels.map((parcel) => {
+            const loc = getLocalizedParcelText(parcel, language);
+            return (
+              <div
+                key={parcel.id}
+                className="bg-white rounded-3xl border border-slate-200 shadow-sm hover:shadow-lg transition-all p-6 flex flex-col justify-between space-y-5 group"
+              >
+                <div className="space-y-4">
+                  
+                  {/* Header */}
+                  <div className="flex items-center justify-between">
+                    <span className="px-3 py-1 bg-emerald-100 text-emerald-800 text-xs font-bold rounded-full capitalize">
+                      {loc.category}
+                    </span>
+                    <div className="text-right">
+                      <span className="text-[10px] text-slate-400 block font-semibold">
+                        {language === 'BN' ? 'আপনার ইনকাম' : 'Your Earnings'}
                       </span>
+                      <span className="text-2xl font-black text-emerald-600">৳ {parcel.payoutBDT}</span>
                     </div>
                   </div>
 
-                  <span className="text-[10px] text-slate-400">
-                    ওজন: &lt; ২.০ কেজি
-                  </span>
+                  {/* Title & Desc */}
+                  <div>
+                    <h3 className="text-base font-black text-slate-900 group-hover:text-emerald-600 transition">
+                      {loc.title}
+                    </h3>
+                    <p className="text-xs text-slate-500 mt-1 line-clamp-2 leading-relaxed">
+                      {loc.description}
+                    </p>
+                  </div>
+
+                  {/* Route */}
+                  <div className="space-y-2 bg-slate-50/80 p-3.5 rounded-2xl border border-slate-100 text-xs">
+                    <div className="flex items-start space-x-2">
+                      <div className="w-2 h-2 rounded-full bg-blue-500 mt-1 shrink-0" />
+                      <div>
+                        <span className="text-[10px] text-slate-400 block font-bold uppercase">
+                          {language === 'BN' ? 'পিকআপ (Pickup)' : 'PICKUP'}
+                        </span>
+                        <span className="font-bold text-slate-800">{parcel.pickupLocation}</span>
+                      </div>
+                    </div>
+                    <div className="border-l-2 border-dashed border-slate-300 ml-1 h-3" />
+                    <div className="flex items-start space-x-2">
+                      <div className="w-2 h-2 rounded-full bg-emerald-500 mt-1 shrink-0" />
+                      <div>
+                        <span className="text-[10px] text-slate-400 block font-bold uppercase">
+                          {language === 'BN' ? 'ড্রপঅফ (Dropoff)' : 'DROPOFF'}
+                        </span>
+                        <span className="font-bold text-slate-800">{parcel.dropoffLocation}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Sender Trust & Safety */}
+                  <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-xs">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-6 h-6 rounded-full bg-slate-200 text-slate-700 font-bold flex items-center justify-center text-[10px]">
+                        {loc.senderInitial}
+                      </div>
+                      <div>
+                        <span className="font-bold text-slate-700 block text-[11px]">{loc.senderName}</span>
+                        <span className="text-[10px] text-emerald-600 font-semibold flex items-center gap-0.5">
+                          <CheckCircle2 className="w-2.5 h-2.5 inline" /> Porichoy NID Verified
+                        </span>
+                      </div>
+                    </div>
+
+                    <span className="text-[10px] text-slate-400 font-medium">
+                      {loc.weight}
+                    </span>
+                  </div>
+
                 </div>
+
+                {/* Accept Button */}
+                <button
+                  onClick={() => handleAccept(parcel)}
+                  className="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center justify-center space-x-2"
+                >
+                  <span>{language === 'BN' ? 'ডেলিভারি গ্রহণ করুন (Accept Gig)' : 'Accept Delivery Gig'}</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
 
               </div>
-
-              {/* Accept Button */}
-              <button
-                onClick={() => handleAccept(parcel)}
-                className="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center justify-center space-x-2"
-              >
-                <span>{language === 'BN' ? 'ডেলিভারি গ্রহণ করুন (Accept Gig)' : 'Accept Delivery Gig'}</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
-
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 
