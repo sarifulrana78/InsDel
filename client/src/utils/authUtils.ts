@@ -69,3 +69,12 @@ export function deriveDisplayNameFromEmail(email: string): string {
     .replace(/\b\w/g, char => char.toUpperCase());
 }
 
+/**
+ * Sanitizes and normalizes an email address by trimming whitespace and converting to lowercase.
+ */
+export function sanitizeEmail(email: string): string {
+  if (!email) return '';
+  return email.trim().toLowerCase();
+}
+
+
