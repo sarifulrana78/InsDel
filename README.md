@@ -95,3 +95,12 @@ Ushol Mama crowd-shipping platform.
 
 - Localized commuter mission transit progression steppers and dual-OTP security dialogs.
 
+- Overhauled user authentication flow to support streamlined email-first registration and login.
+
+- Removed pre-filled credentials and demo name pills from the Sign In modal for a clean and unopinionated UX.
+
+- Reduced Sign Up requirements to Email Address and Password only, dynamically deriving user display names.
+
+- Updated server User schema and auth controller to make phone and name optional for email-only signups.
+
+- Added comprehensive automated unit test suite for email sanitization, phone parsing, and identity derivation utilities.
