@@ -53,3 +53,19 @@ export function formatBDPhoneDisplay(phone: string): string {
   }
   return phone;
 }
+
+/**
+ * Derives a clean, capitalized human-readable display name from an email address.
+ * Example: 'sakib.al.hasan@gmail.com' -> 'Sakib Al Hasan'
+ */
+export function deriveDisplayNameFromEmail(email: string): string {
+  if (!email || !email.includes('@')) return 'User';
+  const prefix = email.split('@')[0].trim();
+  if (!prefix) return 'User';
+  return prefix
+    .replace(/[._\-+]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .replace(/\b\w/g, char => char.toUpperCase());
+}
+
