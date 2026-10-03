@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { deriveDisplayNameFromEmail } from '@/utils/authUtils';
 
 export interface UserProfile {
   id: string;
@@ -82,7 +83,7 @@ export interface AppContextType {
   closeAuthModal: () => void;
   loginManual: (credentials: { identifier: string; password?: string; role?: 'sender' | 'commuter'; name?: string }) => { success: boolean; message?: string };
   loginWithGoogle: (googleData?: { name?: string; email?: string; avatar?: string; role?: 'sender' | 'commuter' }) => { success: boolean; message?: string };
-  registerManual: (data: { name: string; emailOrPhone: string; password?: string; role?: 'sender' | 'commuter'; nidNumber?: string }) => { success: boolean; message?: string };
+  registerManual: (data: { name?: string; emailOrPhone: string; password?: string; role?: 'sender' | 'commuter'; nidNumber?: string }) => { success: boolean; message?: string };
   logout: () => void;
 }
 
@@ -122,7 +123,20 @@ export const DEMO_USERS = {
 };
 
 const DEFAULT_USER: UserProfile = {
-  ...DEMO_USERS.tanvir
+  id: '',
+  name: 'অতিথি ব্যবহারকারী',
+  phone: '',
+  email: '',
+  role: 'sender',
+  isNidVerified: false,
+  nidNumber: '',
+  walletBalance: 0,
+  escrowLockedBalance: 0,
+  rating: 5.0,
+  totalTrips: 0,
+  avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80',
+  isLoggedIn: false,
+  authProvider: undefined
 };
 
 const INITIAL_PARCELS: ParcelItem[] = [
@@ -301,10 +315,13 @@ export function AppProvider({ children }: { children: ReactNode }) {
       const storedUser = localStorage.getItem('ushol_user');
       if (storedUser) {
         const parsed = JSON.parse(storedUser);
-        if (parsed.isLoggedIn === undefined) {
-          parsed.isLoggedIn = true;
+        // Clear legacy hardcoded demo user if present so it starts clean
+        if (parsed.id === 'usr_tanvir_01' && parsed.authProvider === 'demo') {
+          setUser(DEFAULT_USER);
+          localStorage.removeItem('ushol_user');
+        } else {
+          setUser(parsed);
         }
-        setUser(parsed);
       }
 
       const storedParcels = localStorage.getItem('ushol_parcels');
@@ -627,27 +644,16 @@ export function AppProvider({ children }: { children: ReactNode }) {
     name?: string;
   }): { success: boolean; message?: string } => {
     const trimmed = identifier.trim().toLowerCase();
-
-    // Check if matching preset demo accounts
-    if (trimmed.includes('kamrul') || trimmed.includes('01911')) {
-      setUser({ ...DEMO_USERS.kamrul, role: role || DEMO_USERS.kamrul.role, isLoggedIn: true, authProvider: 'manual' });
-      return { success: true, message: 'Logged in as Kamrul Hasan' };
-    }
-    if (trimmed.includes('tanvir') || trimmed.includes('01712')) {
-      setUser({ ...DEMO_USERS.tanvir, role: role || DEMO_USERS.tanvir.role, isLoggedIn: true, authProvider: 'manual' });
-      return { success: true, message: 'Logged in as Tanvir Ahmed' };
-    }
-
     const isEmail = trimmed.includes('@');
-    const displayName = name || (isEmail ? identifier.split('@')[0] : 'ইউজার ' + identifier.slice(-4));
+    const displayName = name || (isEmail ? deriveDisplayNameFromEmail(trimmed) : trimmed);
 
     setUser(prev => ({
       ...prev,
       id: 'usr_' + Date.now().toString().slice(-6),
       name: displayName,
-      email: isEmail ? identifier : `${identifier}@usholmama.com`,
-      phone: isEmail ? '01700-123456' : identifier,
-      role: role,
+      email: isEmail ? trimmed : `${trimmed}@usholmama.com`,
+      phone: isEmail ? (prev.phone || '') : trimmed,
+      role: role || prev.role || 'sender',
       isLoggedIn: true,
       isNidVerified: true,
       authProvider: 'manual'
@@ -662,8 +668,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
     avatar?: string;
     role?: 'sender' | 'commuter';
   }): { success: boolean; message?: string } => {
-    const gName = googleData?.name || 'তানভীর আহমেদ (Google)';
-    const gEmail = googleData?.email || 'tanvir.commuter@gmail.com';
+    const gEmail = googleData?.email || 'user@gmail.com';
+    const gName = googleData?.name || deriveDisplayNameFromEmail(gEmail);
     const gAvatar = googleData?.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80';
 
     setUser(prev => ({
@@ -682,21 +688,24 @@ export function AppProvider({ children }: { children: ReactNode }) {
   };
 
   const registerManual = (data: {
-    name: string;
+    name?: string;
     emailOrPhone: string;
     password?: string;
     role?: 'sender' | 'commuter';
     nidNumber?: string;
   }): { success: boolean; message?: string } => {
     const isEmail = data.emailOrPhone.includes('@');
+    const email = isEmail ? data.emailOrPhone : `${data.emailOrPhone}@usholmama.com`;
+    const formattedName = data.name?.trim() || (isEmail ? deriveDisplayNameFromEmail(data.emailOrPhone) : data.emailOrPhone);
+
     setUser({
       id: 'usr_' + Date.now().toString().slice(-6),
-      name: data.name,
-      email: isEmail ? data.emailOrPhone : `${data.emailOrPhone}@usholmama.com`,
-      phone: isEmail ? '01712-000000' : data.emailOrPhone,
+      name: formattedName,
+      email: email,
+      phone: isEmail ? '' : data.emailOrPhone,
       role: data.role || 'sender',
       isNidVerified: !!data.nidNumber,
-      nidNumber: data.nidNumber || '1995' + Math.floor(100000000 + Math.random() * 900000000),
+      nidNumber: data.nidNumber || '',
       walletBalance: 200, // Sign up bonus ৳200
       escrowLockedBalance: 0,
       rating: 5.0,
