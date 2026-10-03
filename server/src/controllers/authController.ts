@@ -81,19 +81,22 @@ export const loginUser = async (req: Request, res: Response): Promise<any> => {
 export const registerUser = async (req: Request, res: Response): Promise<any> => {
   try {
     const { name, emailOrPhone, role, nidNumber } = req.body;
-    if (!name || !emailOrPhone) {
-      return res.status(400).json({ success: false, message: 'Name and email or phone are required.' });
+    if (!emailOrPhone) {
+      return res.status(400).json({ success: false, message: 'Email or mobile number is required.' });
     }
 
     const isEmail = emailOrPhone.includes('@');
+    const emailPrefix = isEmail ? emailOrPhone.split('@')[0] : emailOrPhone;
+    const displayName = name?.trim() || emailPrefix.replace(/[._\-+]/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase());
+
     const newUser = new User({
-      name,
-      email: isEmail ? emailOrPhone : `${emailOrPhone}@usholmama.com`,
-      phone: isEmail ? '01700-000000' : emailOrPhone,
+      name: displayName,
+      email: isEmail ? emailOrPhone.trim().toLowerCase() : `${emailOrPhone}@usholmama.com`,
+      phone: isEmail ? undefined : emailOrPhone,
       role: role || 'sender',
       nidNumber: nidNumber || '',
       nidStatus: nidNumber ? 'verified' : 'unverified',
-      walletBalance: 200 // Bonus
+      walletBalance: 200 // Welcome Bonus
     });
 
     await newUser.save();
