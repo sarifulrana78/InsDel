@@ -47,18 +47,17 @@ export function AuthModal({ isOpen, onClose, language: propLang, initialMode = '
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
 
-  // Form states
-  const [loginIdentifier, setLoginIdentifier] = useState('01712-345678');
-  const [loginPassword, setLoginPassword] = useState('••••••••');
+  // Form states - Empty initial inputs
+  const [loginIdentifier, setLoginIdentifier] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(true);
 
-  // Sign up states
-  const [regName, setRegName] = useState('');
-  const [regIdentifier, setRegIdentifier] = useState('');
+  // Sign up states - Email & Password only
+  const [regEmail, setRegEmail] = useState('');
   const [regPassword, setRegPassword] = useState('');
-  const [regNid, setRegNid] = useState('');
 
   // Google interactive picker state
+  const [googleEmail, setGoogleEmail] = useState('');
   const [showGooglePicker, setShowGooglePicker] = useState(false);
 
   useEffect(() => {
@@ -92,11 +91,15 @@ export function AuthModal({ isOpen, onClose, language: propLang, initialMode = '
       setErrorMessage(lang === 'BN' ? 'অনুগ্রহ করে ইমেইল বা ফোন নম্বর দিন।' : 'Please enter your email or phone number.');
       return;
     }
+    if (!loginPassword) {
+      setErrorMessage(lang === 'BN' ? 'অনুগ্রহ করে আপনার পাসওয়ার্ড দিন।' : 'Please enter your password.');
+      return;
+    }
 
     setIsLoading(true);
     setTimeout(() => {
       loginManual({
-        identifier: loginIdentifier,
+        identifier: loginIdentifier.trim(),
         password: loginPassword,
         role: selectedRole
       });
@@ -111,26 +114,21 @@ export function AuthModal({ isOpen, onClose, language: propLang, initialMode = '
     }, 600);
   };
 
-  // Handle Manual Register Submit
+  // Handle Manual Register Submit (Email Only)
   const handleManualRegister = (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage('');
 
-    if (!regName.trim()) {
-      setErrorMessage(lang === 'BN' ? 'অনুগ্রহ করে আপনার নাম লিখুন।' : 'Please enter your full name.');
+    const email = regEmail.trim();
+    if (!email) {
+      setErrorMessage(lang === 'BN' ? 'অনুগ্রহ করে আপনার ইমেইল ঠিকানা দিন।' : 'Please enter your email address.');
       return;
     }
-    if (!regIdentifier.trim()) {
-      setErrorMessage(lang === 'BN' ? 'ইমেইল বা মোবাইল নম্বর প্রদান করুন।' : 'Please enter your phone or email.');
+    if (!isValidEmail(email)) {
+      setErrorMessage(lang === 'BN' ? 'সঠিক ইমেইল ঠিকানা দিন (উদা: yourname@gmail.com)।' : 'Please enter a valid email address (e.g. yourname@gmail.com).');
       return;
     }
-    const isPhone = isValidBangladeshiPhone(regIdentifier);
-    const isEmail = isValidEmail(regIdentifier);
-    if (!isPhone && !isEmail) {
-      setErrorMessage(lang === 'BN' ? 'সঠিক ১১ ডিজিটের মোবাইল নম্বর (উদা: 017XXXXXXXX) বা বৈধ ইমেইল দিন।' : 'Please enter a valid 11-digit mobile number or email address.');
-      return;
-    }
-    if (regPassword && regPassword.length < 6) {
+    if (!regPassword || regPassword.length < 6) {
       setErrorMessage(lang === 'BN' ? 'পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।' : 'Password must be at least 6 characters.');
       return;
     }
@@ -138,15 +136,13 @@ export function AuthModal({ isOpen, onClose, language: propLang, initialMode = '
     setIsLoading(true);
     setTimeout(() => {
       registerManual({
-        name: regName,
-        emailOrPhone: regIdentifier,
+        emailOrPhone: email,
         password: regPassword,
-        role: selectedRole,
-        nidNumber: regNid
+        role: selectedRole
       });
       switchRole(selectedRole);
       setIsLoading(false);
-      setSuccessMessage(lang === 'BN' ? 'অ্যাকাউন্ট তৈরি সফল হয়েছে! ৳২০০ বোনাস যোগ হয়েছে।' : 'Account created! ৳200 bonus added.');
+      setSuccessMessage(lang === 'BN' ? 'ইমেইল দিয়ে সফলভাবে অ্যাকাউন্ট তৈরি হয়েছে! ৳২০০ বোনাস যোগ হয়েছে।' : 'Account created! ৳200 bonus added.');
 
       setTimeout(() => {
         onClose();
@@ -156,13 +152,13 @@ export function AuthModal({ isOpen, onClose, language: propLang, initialMode = '
   };
 
   // Handle Google Login Flow
-  const handleGoogleSelect = (userEmail: string, userName: string) => {
+  const handleGoogleSelect = (userEmail: string, userName?: string) => {
     setIsLoading(true);
     setShowGooglePicker(false);
     
     setTimeout(() => {
       loginWithGoogle({
-        name: userName,
+        name: userName || userEmail.split('@')[0],
         email: userEmail,
         role: selectedRole
       });
@@ -175,19 +171,6 @@ export function AuthModal({ isOpen, onClose, language: propLang, initialMode = '
         router.push('/dashboard');
       }, 500);
     }, 600);
-  };
-
-  // Quick Autofill for Demo Testing
-  const fillDemo = (type: 'tanvir' | 'kamrul') => {
-    if (type === 'tanvir') {
-      setLoginIdentifier('01712-345678');
-      setLoginPassword('password123');
-      setSelectedRole('sender');
-    } else {
-      setLoginIdentifier('kamrul.hasan@gmail.com');
-      setLoginPassword('password123');
-      setSelectedRole('commuter');
-    }
   };
 
   return (
@@ -319,48 +302,38 @@ export function AuthModal({ isOpen, onClose, language: propLang, initialMode = '
 
             {/* Google Interactive Account Picker Dropdown / Overlay */}
             {showGooglePicker && (
-              <div className="p-3 bg-slate-50 border border-slate-200 rounded-2xl animate-in fade-in slide-in-from-top-2 space-y-2">
+              <div className="p-3.5 bg-slate-50 border border-slate-200 rounded-2xl animate-in fade-in slide-in-from-top-2 space-y-2.5">
                 <div className="flex items-center justify-between pb-1.5 border-b border-slate-200 text-[11px] text-slate-500 font-bold">
-                  <span>{lang === 'BN' ? 'Google অ্যাকাউন্ট নির্বাচন করুন' : 'Select a Google Account'}</span>
+                  <span>{lang === 'BN' ? 'Google ইমেইল দিয়ে সাইন ইন করুন' : 'Sign in with Google Email'}</span>
                   <button 
                     onClick={() => setShowGooglePicker(false)}
-                    className="text-slate-400 hover:text-slate-600 text-xs"
+                    className="text-slate-400 hover:text-slate-600 text-xs cursor-pointer"
                   >
                     ✕
                   </button>
                 </div>
-
-                {/* Account 1 */}
-                <button
-                  type="button"
-                  onClick={() => handleGoogleSelect('tanvir.commuter@gmail.com', 'তানভীর আহমেদ')}
-                  className="w-full flex items-center space-x-3 p-2 rounded-xl bg-white hover:bg-emerald-50 border border-slate-200/80 transition text-left cursor-pointer group"
-                >
-                  <div className="w-8 h-8 rounded-full bg-emerald-600 text-white font-black text-xs flex items-center justify-center shrink-0">
-                    ত
-                  </div>
-                  <div className="overflow-hidden flex-1">
-                    <p className="text-xs font-bold text-slate-900 group-hover:text-emerald-700">তানভীর আহমেদ</p>
-                    <p className="text-[10px] text-slate-500 truncate">tanvir.commuter@gmail.com</p>
-                  </div>
-                  <span className="text-[10px] text-emerald-600 font-black">NID ✓</span>
-                </button>
-
-                {/* Account 2 */}
-                <button
-                  type="button"
-                  onClick={() => handleGoogleSelect('kamrul.hasan@gmail.com', 'কামরুল হাসান')}
-                  className="w-full flex items-center space-x-3 p-2 rounded-xl bg-white hover:bg-emerald-50 border border-slate-200/80 transition text-left cursor-pointer group"
-                >
-                  <div className="w-8 h-8 rounded-full bg-teal-600 text-white font-black text-xs flex items-center justify-center shrink-0">
-                    ক
-                  </div>
-                  <div className="overflow-hidden flex-1">
-                    <p className="text-xs font-bold text-slate-900 group-hover:text-teal-700">কামরুল হাসান (মেট্রো যাত্রী)</p>
-                    <p className="text-[10px] text-slate-500 truncate">kamrul.hasan@gmail.com</p>
-                  </div>
-                  <span className="text-[10px] text-teal-600 font-black">5.0★</span>
-                </button>
+                <div className="space-y-2">
+                  <input
+                    type="email"
+                    value={googleEmail}
+                    onChange={(e) => setGoogleEmail(e.target.value)}
+                    placeholder="yourname@gmail.com"
+                    className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs font-bold text-slate-900 focus:outline-none focus:border-emerald-500"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (googleEmail.trim() && isValidEmail(googleEmail.trim())) {
+                        handleGoogleSelect(googleEmail.trim());
+                      } else {
+                        setErrorMessage(lang === 'BN' ? 'অনুগ্রহ করে সঠিক Google ইমেইল দিন।' : 'Please enter a valid Google email.');
+                      }
+                    }}
+                    className="w-full py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition cursor-pointer"
+                  >
+                    {lang === 'BN' ? 'Google দিয়ে এগিয়ে যান' : 'Continue with Google'}
+                  </button>
+                </div>
               </div>
             )}
           </div>
@@ -389,7 +362,7 @@ export function AuthModal({ isOpen, onClose, language: propLang, initialMode = '
                     type="text"
                     value={loginIdentifier}
                     onChange={(e) => setLoginIdentifier(e.target.value)}
-                    placeholder="01712-345678 বা email@gmail.com"
+                    placeholder={lang === 'BN' ? 'ইমেইল বা মোবাইল নম্বর দিন' : 'Enter email or mobile number'}
                     className="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-900 focus:outline-none focus:border-emerald-500 focus:bg-white transition"
                     required
                   />
@@ -403,7 +376,7 @@ export function AuthModal({ isOpen, onClose, language: propLang, initialMode = '
                   </label>
                   <a 
                     href="#forgot" 
-                    onClick={(e) => { e.preventDefault(); alert(lang === 'BN' ? 'ডেমো অ্যাকাউন্ট পাসওয়ার্ড: password123' : 'Demo Password: password123'); }}
+                    onClick={(e) => { e.preventDefault(); alert(lang === 'BN' ? 'পাসওয়ার্ড রিসেটের লিংক আপনার ইমেইলে পাঠানো হবে।' : 'Password reset link will be sent to your email.'); }}
                     className="text-[10px] font-bold text-emerald-600 hover:text-emerald-700 hover:underline"
                   >
                     {lang === 'BN' ? 'পাসওয়ার্ড ভুলে গেছেন?' : 'Forgot password?'}
@@ -417,7 +390,7 @@ export function AuthModal({ isOpen, onClose, language: propLang, initialMode = '
                     type={showPassword ? 'text' : 'password'}
                     value={loginPassword}
                     onChange={(e) => setLoginPassword(e.target.value)}
-                    placeholder="পাসওয়ার্ড লিখুন"
+                    placeholder={lang === 'BN' ? 'আপনার পাসওয়ার্ড দিন' : 'Enter your password'}
                     className="w-full pl-9 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-900 focus:outline-none focus:border-emerald-500 focus:bg-white transition"
                     required
                   />
@@ -431,7 +404,7 @@ export function AuthModal({ isOpen, onClose, language: propLang, initialMode = '
                 </div>
               </div>
 
-              {/* Remember me & Demo quick fills */}
+              {/* Remember me */}
               <div className="flex items-center justify-between pt-1">
                 <label className="flex items-center space-x-2 cursor-pointer">
                   <input
@@ -444,26 +417,6 @@ export function AuthModal({ isOpen, onClose, language: propLang, initialMode = '
                     {lang === 'BN' ? 'মনে রাখুন' : 'Remember me'}
                   </span>
                 </label>
-
-                {/* Quick Autofill Pills */}
-                <div className="flex items-center space-x-1.5">
-                  <button
-                    type="button"
-                    onClick={() => fillDemo('tanvir')}
-                    className="text-[10px] px-2 py-0.5 rounded-lg bg-emerald-50 text-emerald-700 hover:bg-emerald-100 font-bold transition border border-emerald-200/60"
-                    title="Autofill Sender Tanvir"
-                  >
-                    ⚡ তানভীর (প্রেরক)
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => fillDemo('kamrul')}
-                    className="text-[10px] px-2 py-0.5 rounded-lg bg-teal-50 text-teal-700 hover:bg-teal-100 font-bold transition border border-teal-200/60"
-                    title="Autofill Commuter Kamrul"
-                  >
-                    🎒 কামরুল (যাত্রী)
-                  </button>
-                </div>
               </div>
 
               {/* Submit Button */}
@@ -483,41 +436,22 @@ export function AuthModal({ isOpen, onClose, language: propLang, initialMode = '
               </button>
             </form>
           ) : (
-            /* 3. Manual Sign Up Form */
-            <form onSubmit={handleManualRegister} className="space-y-3">
+            /* 3. Manual Sign Up Form (Only Email & Password) */
+            <form onSubmit={handleManualRegister} className="space-y-3.5">
               <div>
                 <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wide mb-1">
-                  {lang === 'BN' ? 'আপনার পূর্ণ নাম' : 'Full Name'}
+                  {lang === 'BN' ? 'ইমেইল ঠিকানা' : 'Email Address'}
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-                    <User className="w-4 h-4" />
+                    <Mail className="w-4 h-4" />
                   </div>
                   <input
-                    type="text"
-                    value={regName}
-                    onChange={(e) => setRegName(e.target.value)}
-                    placeholder="উদা: আসিফ ইকবাল"
-                    className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-900 focus:outline-none focus:border-emerald-500 focus:bg-white transition"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wide mb-1">
-                  {lang === 'BN' ? 'মোবাইল নম্বর বা ইমেইল' : 'Mobile Number or Email'}
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-                    <Phone className="w-4 h-4" />
-                  </div>
-                  <input
-                    type="text"
-                    value={regIdentifier}
-                    onChange={(e) => setRegIdentifier(e.target.value)}
-                    placeholder="01XXXXXXXXX বা user@domain.com"
-                    className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-900 focus:outline-none focus:border-emerald-500 focus:bg-white transition"
+                    type="email"
+                    value={regEmail}
+                    onChange={(e) => setRegEmail(e.target.value)}
+                    placeholder="user@example.com"
+                    className="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-900 focus:outline-none focus:border-emerald-500 focus:bg-white transition"
                     required
                   />
                 </div>
@@ -535,8 +469,8 @@ export function AuthModal({ isOpen, onClose, language: propLang, initialMode = '
                     type={showPassword ? 'text' : 'password'}
                     value={regPassword}
                     onChange={(e) => setRegPassword(e.target.value)}
-                    placeholder="কমপক্ষে ৬টি অক্ষর"
-                    className="w-full pl-9 pr-10 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-900 focus:outline-none focus:border-emerald-500 focus:bg-white transition"
+                    placeholder={lang === 'BN' ? 'কমপক্ষে ৬টি অক্ষর' : 'At least 6 characters'}
+                    className="w-full pl-9 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-900 focus:outline-none focus:border-emerald-500 focus:bg-white transition"
                     required
                   />
                   <button
@@ -549,26 +483,10 @@ export function AuthModal({ isOpen, onClose, language: propLang, initialMode = '
                 </div>
               </div>
 
-              <div>
-                <div className="flex items-center justify-between mb-1">
-                  <label className="block text-[11px] font-bold text-slate-700 uppercase tracking-wide">
-                    {lang === 'BN' ? 'NID নম্বর (ঐচ্ছিক)' : 'NID Number (Optional)'}
-                  </label>
-                  <span className="text-[10px] text-emerald-600 font-bold">Porichoy API</span>
-                </div>
-                <input
-                  type="text"
-                  value={regNid}
-                  onChange={(e) => setRegNid(e.target.value)}
-                  placeholder="১০ বা ১৭ ডিজিটের জাতীয় পরিচয়পত্র নম্বর"
-                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-900 focus:outline-none focus:border-emerald-500 focus:bg-white transition"
-                />
-              </div>
-
               {/* Bonus alert */}
               <div className="p-2.5 rounded-xl bg-emerald-50 border border-emerald-200/80 text-[11px] text-emerald-800 font-bold flex items-center space-x-2">
                 <Sparkles className="w-4 h-4 text-emerald-600 shrink-0" />
-                <span>{lang === 'BN' ? 'রেজিস্ট্রেশনে পাচ্ছেন ৳২০০ ফ্রি এসক্রো ওয়ালেট ব্যালেন্স!' : 'Get ৳200 Free Escrow Wallet balance on signup!'}</span>
+                <span>{lang === 'BN' ? 'ইমেইল সাইন আপে পাচ্ছেন ৳২০০ ফ্রি এসক্রো ওয়ালেট ব্যালেন্স!' : 'Get ৳200 Free Escrow Wallet balance on signup!'}</span>
               </div>
 
               {/* Submit Register */}
@@ -581,7 +499,7 @@ export function AuthModal({ isOpen, onClose, language: propLang, initialMode = '
                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                 ) : (
                   <>
-                    <span>{lang === 'BN' ? 'অ্যাকাউন্ট তৈরি করুন' : 'Create Free Account'}</span>
+                    <span>{lang === 'BN' ? 'ইমেইল দিয়ে অ্যাকাউন্ট তৈরি করুন' : 'Sign Up with Email'}</span>
                     <ArrowRight className="w-4 h-4" />
                   </>
                 )}
