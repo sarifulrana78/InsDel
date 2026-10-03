@@ -55,5 +55,13 @@
 - Dual OTP & Inspection Modals: Localized sender secret pickup/dropoff OTP instructions, physical open-box parcel inspection dialogs, and accepted parcel safety declarations.
 - Seamless LocalStorage Cache Rehydration: Added automated state enrichment on application mount so previously cached `ushol_parcels` in browser storage seamlessly receive the new localized properties without requiring a cache reset.
 
+## Update 16 - 10/04/2026 03:20:00
+- Streamlined Email-First Registration: Overhauled the user registration flow in `AuthModal` and `/login` to allow 1-click account creation with just Email Address and Password, eliminating mandatory upfront full name and NID collection.
+- Sanitized Sign-In Form State: Cleansed the sign-in modal from pre-filled mock credentials and removed legacy hardcoded demo identity pills (`⚡ তানভীর` and `🎒 কামরুল`) to provide an unopinionated, clean login experience.
+- Automated Display Name Derivation: Created `deriveDisplayNameFromEmail` utility in `authUtils.ts` that dynamically generates clean, capitalized user display names from email prefixes upon registration and authentication.
+- Decoupled Backend Model & Registration: Updated `UserSchema` and `registerUser` in the server controller to make phone and full name optional, aligning backend validation with the streamlined email-first signup pipeline.
+- Automated Verification Suite: Added automated unit tests (`authUtils.test.ts`) covering email validation, phone parsing, password scoring, and display name sanitization.
+
+
 
 
