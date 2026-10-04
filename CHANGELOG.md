@@ -62,6 +62,10 @@
 - Decoupled Backend Model & Registration: Updated `UserSchema` and `registerUser` in the server controller to make phone and full name optional, aligning backend validation with the streamlined email-first signup pipeline.
 - Automated Verification Suite: Added automated unit tests (`authUtils.test.ts`) covering email validation, phone parsing, password scoring, and display name sanitization.
 
-
-
-
+## Update 17 - 10/05/2026 04:10:00
+- Google Manual Sign-In Overhaul: Re-engineered "Continue with Google" flow into a dedicated, interactive Google Sign-In card with auto-focus, eliminating duplicate nested buttons and preventing empty submission errors.
+- Intelligent Google Email Normalization: Built `normalizeGoogleEmail` utility that automatically appends `@gmail.com` when users enter their username or handle without a domain, ensuring zero formatting friction.
+- Form Submission & Keyboard Navigation: Wrapped Google sign-in controls in a native form with `Enter` key submission support and responsive submission buttons with Google brand colors (`#1a73e8`).
+- Quick Helper Pills & Instant Test Accounts: Added interactive `+ @gmail.com` domain completion pill and role-aware `⚡ Quick Demo Gmail` credentials for 1-click test authentication.
+- Real-Time Inline Validation: Replaced disconnected modal-top error alerts with scoped inline feedback badges that clear automatically as users type.
+- Backend Controller & Test Suite: Enhanced server `googleAuth` handler with lenient email parsing and derived names, supported by a dedicated automated unit test suite.
