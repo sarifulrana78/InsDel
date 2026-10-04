@@ -113,19 +113,30 @@ export const registerUser = async (req: Request, res: Response): Promise<any> =>
 
 export const googleAuth = async (req: Request, res: Response): Promise<any> => {
   try {
-    const { email, name, role } = req.body;
-    if (!email) {
+    const { email: rawEmail, name, role } = req.body;
+    if (!rawEmail || typeof rawEmail !== 'string' || !rawEmail.trim()) {
       return res.status(400).json({ success: false, message: 'Google email is required.' });
     }
 
-    let user = await User.findOne({ email });
+    const trimmed = rawEmail.trim().toLowerCase();
+    const normalizedEmail = trimmed.includes('@') ? trimmed : `${trimmed}@gmail.com`;
+
+    // Derive display name from email if not explicitly provided
+    const emailPrefix = normalizedEmail.split('@')[0];
+    const derivedName = name?.trim() || emailPrefix
+      .replace(/[._\-+]/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .replace(/\b\w/g, (c: string) => c.toUpperCase());
+
+    let user = await User.findOne({ email: normalizedEmail });
     if (!user) {
       user = new User({
-        name: name || 'Google User',
-        email,
+        name: derivedName,
+        email: normalizedEmail,
         phone: '01712-345678',
         role: role || 'sender',
-        walletBalance: 500,
+        walletBalance: 500, // Google sign-in promotional balance
         nidStatus: 'verified'
       });
       await user.save();
@@ -134,9 +145,18 @@ export const googleAuth = async (req: Request, res: Response): Promise<any> => {
     return res.status(200).json({
       success: true,
       message: 'Google login successful',
-      user
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        role: user.role,
+        walletBalance: user.walletBalance,
+        nidStatus: user.nidStatus
+      }
     });
   } catch (error) {
     return res.status(500).json({ success: false, error: (error as Error).message });
   }
 };
+
