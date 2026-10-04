@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { deriveDisplayNameFromEmail } from '@/utils/authUtils';
+import { deriveDisplayNameFromEmail, normalizeGoogleEmail } from '@/utils/authUtils';
 
 export interface UserProfile {
   id: string;
@@ -668,7 +668,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
     avatar?: string;
     role?: 'sender' | 'commuter';
   }): { success: boolean; message?: string } => {
-    const gEmail = googleData?.email || 'user@gmail.com';
+    const rawEmail = googleData?.email || 'user@gmail.com';
+    const gEmail = normalizeGoogleEmail(rawEmail);
     const gName = googleData?.name || deriveDisplayNameFromEmail(gEmail);
     const gAvatar = googleData?.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80';
 
