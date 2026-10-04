@@ -104,3 +104,13 @@ Ushol Mama crowd-shipping platform.
 - Updated server User schema and auth controller to make phone and name optional for email-only signups.
 
 - Added comprehensive automated unit test suite for email sanitization, phone parsing, and identity derivation utilities.
+
+- Re-engineered "Continue with Google" authentication into an intuitive manual Gmail sign-in card with autofocus.
+
+- Integrated automatic Google domain completion (`normalizeGoogleEmail`) allowing frictionless username-only input.
+
+- Added native form submission with keyboard Enter support and contextual inline validation feedback.
+
+- Implemented 1-click test credential pills (`+ @gmail.com` and `⚡ Quick Demo Gmail`) for rapid developer testing.
+
+- Synchronized backend `googleAuth` controller with lenient email normalization, auto-derived names, and test coverage.
