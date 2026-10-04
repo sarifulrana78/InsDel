@@ -314,7 +314,8 @@ export function AuthModal({ isOpen, onClose, language: propLang, initialMode = '
                   setErrorMessage('');
                 }}
                 disabled={isLoading}
-                className="w-full flex items-center justify-center space-x-3 px-4 py-3 border border-slate-200 hover:border-slate-300 rounded-xl hover:bg-slate-50 transition shadow-sm bg-white cursor-pointer group disabled:opacity-60"
+                aria-label="Continue with Google"
+                className="w-full flex items-center justify-center space-x-3 px-4 py-3 border border-slate-200 hover:border-slate-300 rounded-xl hover:bg-slate-50 active:scale-[0.99] focus:outline-none focus:ring-2 focus:ring-slate-200 transition shadow-sm bg-white cursor-pointer group disabled:opacity-60"
               >
                 <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
                   <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
