@@ -18,7 +18,7 @@ import {
   Check
 } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
-import { isValidBangladeshiPhone, isValidEmail, checkPasswordStrength } from '@/utils/authUtils';
+import { isValidBangladeshiPhone, isValidEmail, checkPasswordStrength, deriveDisplayNameFromEmail, normalizeGoogleEmail } from '@/utils/authUtils';
 import { Logo3DMark } from '@/components/Logo';
 
 interface AuthModalProps {
@@ -59,6 +59,7 @@ export function AuthModal({ isOpen, onClose, language: propLang, initialMode = '
   // Google interactive picker state
   const [googleEmail, setGoogleEmail] = useState('');
   const [showGooglePicker, setShowGooglePicker] = useState(false);
+  const [googleError, setGoogleError] = useState('');
 
   useEffect(() => {
     if (isOpen) {
@@ -66,6 +67,7 @@ export function AuthModal({ isOpen, onClose, language: propLang, initialMode = '
       setErrorMessage('');
       setSuccessMessage('');
       setShowGooglePicker(false);
+      setGoogleError('');
     }
   }, [isOpen, initialMode]);
 
@@ -158,7 +160,7 @@ export function AuthModal({ isOpen, onClose, language: propLang, initialMode = '
     
     setTimeout(() => {
       loginWithGoogle({
-        name: userName || userEmail.split('@')[0],
+        name: userName || deriveDisplayNameFromEmail(userEmail),
         email: userEmail,
         role: selectedRole
       });
@@ -171,6 +173,26 @@ export function AuthModal({ isOpen, onClose, language: propLang, initialMode = '
         router.push('/dashboard');
       }, 500);
     }, 600);
+  };
+
+  // Handle Google Manual Input Submission
+  const handleGoogleSubmit = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    setGoogleError('');
+    setErrorMessage('');
+
+    let email = normalizeGoogleEmail(googleEmail);
+    if (!email) {
+      setGoogleError(lang === 'BN' ? 'অনুগ্রহ করে আপনার Gmail এড্রেসটি লিখুন।' : 'Please enter your Gmail address.');
+      return;
+    }
+
+    if (!isValidEmail(email)) {
+      setGoogleError(lang === 'BN' ? 'সঠিক Gmail বা ইমেইল দিন (যেমন: name@gmail.com)।' : 'Please enter a valid Gmail address (e.g. name@gmail.com).');
+      return;
+    }
+
+    handleGoogleSelect(email);
   };
 
   return (
@@ -281,59 +303,143 @@ export function AuthModal({ isOpen, onClose, language: propLang, initialMode = '
             </div>
           )}
 
-          {/* 1. Continue with Google Button */}
-          <div className="space-y-3 mb-4">
-            <button
-              type="button"
-              onClick={() => setShowGooglePicker(true)}
-              disabled={isLoading}
-              className="w-full flex items-center justify-center space-x-3 px-4 py-3 border border-slate-200 hover:border-slate-300 rounded-xl hover:bg-slate-50 transition shadow-sm bg-white cursor-pointer group disabled:opacity-60"
-            >
-              <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
-                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
-                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-              </svg>
-              <span className="text-slate-800 font-bold text-xs tracking-tight group-hover:text-slate-900">
-                {lang === 'BN' ? 'Google অ্যাকাউন্ট দিয়ে এগিয়ে যান' : 'Continue with Google'}
-              </span>
-            </button>
-
-            {/* Google Interactive Account Picker Dropdown / Overlay */}
-            {showGooglePicker && (
-              <div className="p-3.5 bg-slate-50 border border-slate-200 rounded-2xl animate-in fade-in slide-in-from-top-2 space-y-2.5">
-                <div className="flex items-center justify-between pb-1.5 border-b border-slate-200 text-[11px] text-slate-500 font-bold">
-                  <span>{lang === 'BN' ? 'Google ইমেইল দিয়ে সাইন ইন করুন' : 'Sign in with Google Email'}</span>
+          {/* 1. Continue with Google Section */}
+          <div className="mb-4">
+            {!showGooglePicker ? (
+              <button
+                type="button"
+                onClick={() => {
+                  setShowGooglePicker(true);
+                  setGoogleError('');
+                  setErrorMessage('');
+                }}
+                disabled={isLoading}
+                className="w-full flex items-center justify-center space-x-3 px-4 py-3 border border-slate-200 hover:border-slate-300 rounded-xl hover:bg-slate-50 transition shadow-sm bg-white cursor-pointer group disabled:opacity-60"
+              >
+                <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
+                  <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                  <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                  <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                  <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                </svg>
+                <span className="text-slate-800 font-bold text-xs tracking-tight group-hover:text-slate-900">
+                  {lang === 'BN' ? 'Google অ্যাকাউন্ট দিয়ে এগিয়ে যান' : 'Continue with Google'}
+                </span>
+              </button>
+            ) : (
+              /* Google Interactive Manual Sign-In Card */
+              <div className="p-4 bg-slate-50 border-2 border-emerald-500/30 rounded-2xl animate-in fade-in zoom-in-95 duration-200 shadow-md">
+                <div className="flex items-center justify-between pb-2 mb-3 border-b border-slate-200">
+                  <div className="flex items-center space-x-2">
+                    <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
+                      <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                      <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                      <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                      <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                    </svg>
+                    <span className="text-xs font-bold text-slate-800">
+                      {lang === 'BN' ? 'Google দিয়ে সাইন ইন (Gmail)' : 'Sign in with Google Email'}
+                    </span>
+                  </div>
                   <button 
-                    onClick={() => setShowGooglePicker(false)}
-                    className="text-slate-400 hover:text-slate-600 text-xs cursor-pointer"
-                  >
-                    ✕
-                  </button>
-                </div>
-                <div className="space-y-2">
-                  <input
-                    type="email"
-                    value={googleEmail}
-                    onChange={(e) => setGoogleEmail(e.target.value)}
-                    placeholder="yourname@gmail.com"
-                    className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs font-bold text-slate-900 focus:outline-none focus:border-emerald-500"
-                  />
-                  <button
                     type="button"
                     onClick={() => {
-                      if (googleEmail.trim() && isValidEmail(googleEmail.trim())) {
-                        handleGoogleSelect(googleEmail.trim());
-                      } else {
-                        setErrorMessage(lang === 'BN' ? 'অনুগ্রহ করে সঠিক Google ইমেইল দিন।' : 'Please enter a valid Google email.');
-                      }
+                      setShowGooglePicker(false);
+                      setGoogleError('');
                     }}
-                    className="w-full py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition cursor-pointer"
+                    className="p-1 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-200 transition cursor-pointer"
+                    title="Close"
                   >
-                    {lang === 'BN' ? 'Google দিয়ে এগিয়ে যান' : 'Continue with Google'}
+                    <X className="w-3.5 h-3.5" />
                   </button>
                 </div>
+
+                <form onSubmit={handleGoogleSubmit} className="space-y-3">
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-700 mb-1">
+                      {lang === 'BN' ? 'আপনার Gmail এড্রেসটি লিখুন:' : 'Enter your Gmail address:'}
+                    </label>
+                    <div className="relative">
+                      <input
+                        autoFocus
+                        type="text"
+                        value={googleEmail}
+                        onChange={(e) => {
+                          setGoogleEmail(e.target.value);
+                          if (googleError) setGoogleError('');
+                        }}
+                        placeholder="yourname@gmail.com"
+                        className="w-full px-3 py-2 bg-white border border-slate-300 rounded-xl text-xs font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder:text-slate-400"
+                      />
+                    </div>
+
+                    {/* Inline error feedback */}
+                    {googleError && (
+                      <p className="mt-1 text-[11px] font-semibold text-rose-600 flex items-center space-x-1 animate-in fade-in">
+                        <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                        <span>{googleError}</span>
+                      </p>
+                    )}
+
+                    {/* Auto-suggestion / Quick helper pills */}
+                    <div className="flex flex-wrap items-center gap-1.5 mt-2">
+                      {googleEmail.trim() && !googleEmail.includes('@') && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setGoogleEmail(`${googleEmail.trim()}@gmail.com`);
+                            setGoogleError('');
+                          }}
+                          className="px-2 py-0.5 rounded-lg bg-blue-100 hover:bg-blue-200 text-blue-700 text-[10px] font-bold transition flex items-center space-x-1 cursor-pointer"
+                        >
+                          <span>+ @gmail.com</span>
+                        </button>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const demo = selectedRole === 'commuter' ? 'commuter.user@gmail.com' : 'sender.user@gmail.com';
+                          setGoogleEmail(demo);
+                          setGoogleError('');
+                        }}
+                        className="px-2 py-0.5 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-700 text-[10px] font-bold transition cursor-pointer"
+                      >
+                        ⚡ {lang === 'BN' ? 'ডেমো জিমেইল বসান' : 'Quick Demo Gmail'}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-2 pt-1">
+                    <button
+                      type="submit"
+                      disabled={isLoading}
+                      className="flex-1 py-2.5 px-4 bg-[#1a73e8] hover:bg-[#1557b0] text-white rounded-xl text-xs font-bold transition shadow-sm flex items-center justify-center space-x-2 cursor-pointer disabled:opacity-60"
+                    >
+                      <svg className="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24">
+                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#FFFFFF"/>
+                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#FFFFFF"/>
+                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FFFFFF"/>
+                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#FFFFFF"/>
+                      </svg>
+                      <span>
+                        {isLoading 
+                          ? (lang === 'BN' ? 'যাচাই করা হচ্ছে...' : 'Signing in...') 
+                          : (lang === 'BN' ? 'লগইন করুন' : 'Sign In with Gmail')
+                        }
+                      </span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowGooglePicker(false);
+                        setGoogleError('');
+                      }}
+                      className="py-2.5 px-3 bg-white hover:bg-slate-100 border border-slate-200 text-slate-600 rounded-xl text-xs font-bold transition cursor-pointer"
+                    >
+                      {lang === 'BN' ? 'ফিরে যান' : 'Cancel'}
+                    </button>
+                  </div>
+                </form>
               </div>
             )}
           </div>
