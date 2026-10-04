@@ -77,4 +77,18 @@ export function sanitizeEmail(email: string): string {
   return email.trim().toLowerCase();
 }
 
+/**
+ * Normalizes a Google email or username input.
+ * If user inputs a handle without domain (e.g. 'sariful'), auto-appends '@gmail.com'.
+ */
+export function normalizeGoogleEmail(input: string): string {
+  if (!input) return '';
+  const trimmed = input.trim().toLowerCase();
+  if (!trimmed.includes('@')) {
+    return `${trimmed}@gmail.com`;
+  }
+  return trimmed;
+}
+
+
 
