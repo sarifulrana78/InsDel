@@ -9,7 +9,8 @@ import {
   checkPasswordStrength,
   formatBDPhoneDisplay,
   deriveDisplayNameFromEmail,
-  sanitizeEmail
+  sanitizeEmail,
+  normalizeGoogleEmail
 } from './authUtils';
 
 function runAuthUtilsTests(): boolean {
@@ -45,6 +46,12 @@ function runAuthUtilsTests(): boolean {
   // 3. Email sanitization tests
   assert(sanitizeEmail('  USER@Domain.COM  ') === 'user@domain.com', 'Sanitize trims and lowercases email');
   assert(sanitizeEmail('') === '', 'Sanitize handles empty input');
+
+  // 4. Google email normalization tests
+  assert(normalizeGoogleEmail('sarifulrana') === 'sarifulrana@gmail.com', 'Auto-appends @gmail.com when domain omitted');
+  assert(normalizeGoogleEmail('  User.Name  ') === 'user.name@gmail.com', 'Trims, lowercases, and appends @gmail.com');
+  assert(normalizeGoogleEmail('custom@company.org') === 'custom@company.org', 'Preserves existing custom email domain');
+  assert(normalizeGoogleEmail('') === '', 'Returns empty string on empty input');
 
   // 4. BD Phone validation tests
   assert(isValidBangladeshiPhone('01712345678') === true, 'Valid 11-digit BD phone');
